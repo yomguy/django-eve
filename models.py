@@ -29,7 +29,7 @@ class Accounting(models.Model):
 
 
 class AccountingVersion(models.Model):
-    id = models.ForeignKey(Accounting, db_column='id')
+    id = models.ForeignKey(Accounting, db_column='id', primary_key=True)
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()

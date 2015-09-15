@@ -97,7 +97,7 @@ class Attachment(models.Model):
 
 
 class AttachmentVersion(models.Model):
-    id = models.ForeignKey(Attachment, db_column='id')
+    id = models.ForeignKey(Attachment, db_column='id', primary_key=True)
     email_id = models.BigIntegerField()
     original_name = models.TextField(blank=True, null=True)
     filename = models.TextField(blank=True, null=True)
@@ -407,7 +407,7 @@ class ContactPhonenumber(models.Model):
 class ContactRelationship(models.Model):
     id = models.BigIntegerField(primary_key=True)
     from_contact = models.ForeignKey('Contact', related_name='relationship_from')
-    to_contact = models.ForeignKey('Contact', related_name='relationship_from')
+    to_contact = models.ForeignKey('Contact', related_name='relationship_to')
     contact_relationship_type = models.ForeignKey('ContactRelationshipType', blank=True, null=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

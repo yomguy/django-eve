@@ -429,7 +429,7 @@ class ContactRelationshipType(models.Model):
 
 
 class ContactVersion(models.Model):
-    id = models.ForeignKey(Contact, db_column='id')
+    id = models.ForeignKey(Contact, db_column='id', primary_key=True)
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -485,7 +485,7 @@ class Control(models.Model):
 
 
 class ControlVersion(models.Model):
-    id = models.ForeignKey(Control, db_column='id')
+    id = models.ForeignKey(Control, db_column='id', primary_key=True)
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField()
     ticket_id = models.BigIntegerField()
@@ -623,7 +623,7 @@ class EntryElement(models.Model):
 
 class EntryTickets(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    entry_element = models.ForeignKey(EntryElement)
+    entry_element = models.ForeignKey('EntryElement')
     price = models.ForeignKey('Price')
     quantity = models.BigIntegerField()
     gauge = models.ForeignKey('Gauge')

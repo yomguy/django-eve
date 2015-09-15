@@ -1190,7 +1190,7 @@ class LocationIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Location, db_column='id')
+    id = models.ForeignKey(Location, db_column='id', primary_key=True)
 
     class Meta:
         managed = False
@@ -1495,7 +1495,7 @@ class MetaEventUser(models.Model):
     class Meta:
         managed = False
         db_table = 'meta_event_user'
-        unique_together = (('sf_guard_user', 'meta_event'),)
+        unique_together = (('sf_guard_user', 'meta_event_id'),)
 
 
 class ModelType(models.Model):
@@ -1575,7 +1575,7 @@ class Organism(models.Model):
     description = models.TextField(blank=True, null=True)
     organism_category = models.ForeignKey('OrganismCategory', blank=True, null=True)
     administrative_number = models.CharField(max_length=255, blank=True, null=True)
-    professional = models.ForeignKey('Professional', blank=True, null=True)
+    professional = models.ForeignKey('Professional', blank=True, null=True, related_name='organism_professional')
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField()
@@ -1848,9 +1848,9 @@ class Product(models.Model):
     product_category = models.ForeignKey('ProductCategory', blank=True, null=True)
     picture = models.ForeignKey(Picture, blank=True, null=True)
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
-    vat = models.ForeignKey('Vat', blank=True, null=True)
+    vat = models.ForeignKey('Vat', blank=True, null=True, related_name='product_vat')
     shipping_fees = models.DecimalField(max_digits=8, decimal_places=2)
-    shipping_fees_vat = models.ForeignKey('Vat', blank=True, null=True)
+    shipping_fees_vat = models.ForeignKey('Vat', blank=True, null=True, related_name='product_fees_vat')
     online = models.BooleanField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
@@ -2087,7 +2087,7 @@ class ProductWorkspaceLink(models.Model):
 class Professional(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    organism = models.ForeignKey(Organism)
+    organism = models.ForeignKey(Organism, related_name='professional_organism')
     contact = models.ForeignKey(Contact)
     professional_type = models.ForeignKey('ProfessionalType', blank=True, null=True)
     contact_number = models.CharField(max_length=255, blank=True, null=True)
@@ -2197,8 +2197,8 @@ class SeatedPlan(models.Model):
     id = models.BigIntegerField(primary_key=True)
     seat_diameter = models.BigIntegerField()
     description = models.TextField(blank=True, null=True)
-    picture = models.ForeignKey(Picture, blank=True, null=True)
-    online_picture = models.ForeignKey(Picture, blank=True, null=True)
+    picture = models.ForeignKey(Picture, blank=True, null=True, related_name='seatedplan_picture')
+    online_picture = models.ForeignKey(Picture, blank=True, null=True, related_name='seatedplan_online_picture')
     location = models.ForeignKey(Location, blank=True, null=True)
     background = models.CharField(max_length=255, blank=True, null=True)
     ideal_width = models.BigIntegerField(blank=True, null=True)
@@ -2700,9 +2700,9 @@ class Ticket(models.Model):
     price = models.ForeignKey(Price, blank=True, null=True)
     price_name = models.CharField(max_length=63)
     seat = models.ForeignKey(Seat, blank=True, null=True)
-    duplicating = models.ForeignKey('self', db_column='duplicating', blank=True, null=True)
+    duplicating = models.ForeignKey('self', db_column='duplicating', blank=True, null=True, related_name='ticket_duplicating')
     grouping_fingerprint = models.CharField(max_length=255, blank=True, null=True)
-    cancelling = models.ForeignKey('self', db_column='cancelling', blank=True, null=True)
+    cancelling = models.ForeignKey('self', db_column='cancelling', blank=True, null=True, related_name='ticket_cancelling')
     printed_at = models.DateTimeField(blank=True, null=True)
     integrated_at = models.DateTimeField(blank=True, null=True)
     barcode = models.CharField(max_length=255, blank=True, null=True)
@@ -2789,7 +2789,7 @@ class Transaction(models.Model):
     automatic = models.BooleanField()
     contact = models.ForeignKey(Contact, blank=True, null=True)
     professional = models.ForeignKey(Professional, blank=True, null=True)
-    transaction = models.ForeignKey('self', blank=True, null=True)
+    transaction = models.ForeignKey('self', blank=True, null=True, related_name='transaction_transaction')
     type = models.CharField(max_length=255)
     closed = models.BooleanField()
     description = models.TextField(blank=True, null=True)

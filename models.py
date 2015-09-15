@@ -538,7 +538,7 @@ class EmailIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Email, db_column='id')
+    id = models.ForeignKey(Email, db_column='id', primary_key=True)
 
     class Meta:
         managed = False
@@ -623,7 +623,7 @@ class EntryElement(models.Model):
 
 class EntryTickets(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    entry_element = models.ForeignKey('EntryElement')
+    entry_element = models.ForeignKey(EntryElement)
     price = models.ForeignKey('Price')
     quantity = models.BigIntegerField()
     gauge = models.ForeignKey('Gauge')
@@ -633,7 +633,7 @@ class EntryTickets(models.Model):
     class Meta:
         managed = False
         db_table = 'entry_tickets'
-        unique_together = (('entry_element_id', 'price_id'),)
+        unique_together = (('entry_element', 'price'),)
 
 
 class Event(models.Model):

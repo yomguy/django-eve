@@ -72,7 +72,7 @@ class AddressableIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Addressable, db_column='id')
+    id = models.ForeignKey(Addressable, db_column='id', primary_key=True)
 
     class Meta:
         managed = False
@@ -211,7 +211,7 @@ class BoughtProduct(models.Model):
 
 
 class BoughtProductVersion(models.Model):
-    id = models.ForeignKey(BoughtProduct, db_column='id')
+    id = models.ForeignKey(BoughtProduct, db_column='id', primary_key=True)
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()
@@ -257,7 +257,7 @@ class Cancellation(models.Model):
 
 
 class CancellationVersion(models.Model):
-    id = models.ForeignKey(Cancellation, db_column='id')
+    id = models.ForeignKey(Cancellation, db_column='id', primary_key=True)
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()
@@ -383,7 +383,7 @@ class ContactIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Contact, db_column='id')
+    id = models.ForeignKey('Contact', db_column='id', primary_key=True)
 
     class Meta:
         managed = False
@@ -395,7 +395,7 @@ class ContactPhonenumber(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     number = models.CharField(max_length=255)
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey('Contact')
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
@@ -406,8 +406,8 @@ class ContactPhonenumber(models.Model):
 
 class ContactRelationship(models.Model):
     id = models.BigIntegerField(primary_key=True)
-    from_contact = models.ForeignKey(Contact)
-    to_contact = models.ForeignKey(Contact)
+    from_contact = models.ForeignKey('Contact', related_name='relationship_from')
+    to_contact = models.ForeignKey('Contact', related_name='relationship_from')
     contact_relationship_type = models.ForeignKey('ContactRelationshipType', blank=True, null=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

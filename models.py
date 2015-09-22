@@ -333,7 +333,7 @@ class Contact(models.Model):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
     version = models.BigIntegerField(blank=True, null=True)
 
@@ -1579,7 +1579,7 @@ class Organism(models.Model):
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
     version = models.BigIntegerField(blank=True, null=True)
 
@@ -2097,7 +2097,7 @@ class Professional(models.Model):
     department = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -2978,7 +2978,7 @@ class YOB(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     contact = models.ForeignKey(Contact)
     created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False

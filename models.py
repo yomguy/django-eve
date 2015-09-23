@@ -10,6 +10,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from auditlog.registry import auditlog
 
 
 class Accounting(models.Model):
@@ -2983,3 +2984,7 @@ class YOB(models.Model):
     class Meta:
         managed = False
         db_table = 'y_o_b'
+
+
+auditlog.register(Contact)
+

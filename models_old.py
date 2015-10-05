@@ -10,18 +10,17 @@
 from __future__ import unicode_literals
 
 from django.db import models
-# from auditlog.registry import auditlog
+from auditlog.registry import auditlog
 
 
 class Accounting(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()
     type = models.CharField(max_length=255)
     manifestation_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -36,8 +35,8 @@ class AccountingVersion(models.Model):
     transaction_id = models.BigIntegerField()
     type = models.CharField(max_length=255)
     manifestation_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -47,7 +46,6 @@ class AccountingVersion(models.Model):
 
 
 class Addressable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -58,12 +56,11 @@ class Addressable(models.Model):
     email_npai = models.BooleanField()
     npai = models.BooleanField()
     vcard_uid = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    last_accessor = models.ForeignKey('SfGuardUser', blank=True, null=True)
-    automatic = models.BooleanField()
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -82,41 +79,15 @@ class AddressableIndex(models.Model):
         unique_together = (('keyword', 'field', 'position', 'id'),)
 
 
-class AddressableVersion(models.Model):
-    id = models.ForeignKey(Addressable, db_column='id', primary_key=True)
-    name = models.CharField(max_length=255)
-    address = models.TextField(blank=True, null=True)
-    postalcode = models.CharField(max_length=10, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.CharField(max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    email_no_newsletter = models.BooleanField()
-    email_npai = models.BooleanField()
-    npai = models.BooleanField()
-    vcard_uid = models.CharField(max_length=255, blank=True, null=True)
-    last_accessor_id = models.BigIntegerField(blank=True, null=True)
-    automatic = models.BooleanField()
-    slug = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    version = models.BigIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'addressable_version'
-        unique_together = (('id', 'version'),)
-
-
 class Attachment(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     email = models.ForeignKey('Email')
     original_name = models.TextField(blank=True, null=True)
     filename = models.TextField(blank=True, null=True)
     mime_type = models.TextField(blank=True, null=True)
     size = models.FloatField()
     version = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -139,14 +110,13 @@ class AttachmentVersion(models.Model):
 
 
 class Authentication(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     ip_address = models.CharField(max_length=255, blank=True, null=True)
     user_agent = models.CharField(max_length=255, blank=True, null=True)
     referer = models.CharField(max_length=255, blank=True, null=True)
     success = models.NullBooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -154,7 +124,6 @@ class Authentication(models.Model):
 
 
 class AutoGroup(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     group = models.ForeignKey('GroupTable')
 
     class Meta:
@@ -163,7 +132,6 @@ class AutoGroup(models.Model):
 
 
 class BankPayment(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     payment_id = models.BigIntegerField(blank=True, null=True)
     serialized = models.TextField(blank=True, null=True)
     code = models.CharField(max_length=255, blank=True, null=True)
@@ -199,8 +167,8 @@ class BankPayment(models.Model):
     payment_date = models.CharField(max_length=255, blank=True, null=True)
     response_code = models.CharField(max_length=255, blank=True, null=True)
     raw = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -208,7 +176,6 @@ class BankPayment(models.Model):
 
 
 class BoughtProduct(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
@@ -228,9 +195,8 @@ class BoughtProduct(models.Model):
     ticket = models.ForeignKey('Ticket', blank=True, null=True)
     shipping_fees = models.DecimalField(max_digits=8, decimal_places=2)
     shipping_fees_vat = models.DecimalField(max_digits=5, decimal_places=4)
-    destocked = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -259,9 +225,8 @@ class BoughtProductVersion(models.Model):
     ticket_id = models.BigIntegerField(blank=True, null=True)
     shipping_fees = models.DecimalField(max_digits=8, decimal_places=2)
     shipping_fees_vat = models.DecimalField(max_digits=5, decimal_places=4)
-    destocked = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -271,13 +236,12 @@ class BoughtProductVersion(models.Model):
 
 
 class Cancellation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()
     ticket = models.ForeignKey('Ticket')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -291,8 +255,8 @@ class CancellationVersion(models.Model):
     automatic = models.BooleanField()
     transaction_id = models.BigIntegerField()
     ticket_id = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -302,15 +266,14 @@ class CancellationVersion(models.Model):
 
 
 class Checkpoint(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     event = models.ForeignKey('Event')
     email = models.CharField(max_length=255, blank=True, null=True)
     organism = models.ForeignKey('Organism', blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    type = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    legal = models.BooleanField()
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
@@ -321,11 +284,10 @@ class Checkpoint(models.Model):
 
 
 class Color(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -333,37 +295,36 @@ class Color(models.Model):
 
 
 class Contact(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    email_no_newsletter = models.BooleanField()
-    email_npai = models.BooleanField()
-    npai = models.BooleanField()
+    email_no_newsletter = models.BooleanField(default=False)
+    email_npai = models.BooleanField(default=False)
+    npai = models.BooleanField(default=False)
     vcard_uid = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    last_accessor = models.ForeignKey('SfGuardUser', blank=True, null=True, related_name='contact_last_accessor')
-    automatic = models.BooleanField()
     firstname = models.CharField(max_length=255, blank=True, null=True)
     shortname = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     flash_on_control = models.TextField(blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
-    family_contact = models.BooleanField()
+    family_contact = models.BooleanField(default=False)
     organism_category = models.ForeignKey('OrganismCategory', blank=True, null=True)
-    confirmed = models.BooleanField()
+    confirmed = models.BooleanField(default=False)
     familial_quotient = models.ForeignKey('FamilialQuotient', blank=True, null=True)
     type_of_resources = models.ForeignKey('TypeOfResources', blank=True, null=True)
     familial_situation = models.ForeignKey('FamilialSituation', blank=True, null=True)
-    sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True, related_name='contact_sf_guard_user')
+    sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     culture = models.CharField(max_length=32, blank=True, null=True)
     picture = models.ForeignKey('Picture', blank=True, null=True)
-    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -372,7 +333,6 @@ class Contact(models.Model):
 
 
 class ContactArchive(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     contact = models.ForeignKey(Contact)
     old_id = models.BigIntegerField()
 
@@ -382,15 +342,14 @@ class ContactArchive(models.Model):
 
 
 class ContactEntry(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     professional = models.ForeignKey('Professional')
     comment1 = models.TextField(blank=True, null=True)
     comment2 = models.TextField(blank=True, null=True)
     confirmed = models.NullBooleanField()
     entry = models.ForeignKey('Entry')
     transaction = models.ForeignKey('Transaction', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -398,7 +357,6 @@ class ContactEntry(models.Model):
 
 
 class ContactEventArchives(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     contact = models.ForeignKey(Contact)
     happens_at = models.DateTimeField()
     name = models.TextField()
@@ -421,7 +379,6 @@ class ContactIndex(models.Model):
 
 
 class ContactPhonenumber(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     number = models.CharField(max_length=255)
     contact = models.ForeignKey('Contact')
@@ -437,8 +394,8 @@ class ContactRelationship(models.Model):
     from_contact = models.ForeignKey('Contact', related_name='relationship_from')
     to_contact = models.ForeignKey('Contact', related_name='relationship_to')
     contact_relationship_type = models.ForeignKey('ContactRelationshipType', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -446,10 +403,9 @@ class ContactRelationship(models.Model):
 
 
 class ContactRelationshipType(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -468,8 +424,6 @@ class ContactVersion(models.Model):
     email_npai = models.BooleanField()
     npai = models.BooleanField()
     vcard_uid = models.CharField(max_length=255, blank=True, null=True)
-    last_accessor_id = models.BigIntegerField(blank=True, null=True)
-    automatic = models.BooleanField()
     firstname = models.CharField(max_length=255, blank=True, null=True)
     shortname = models.CharField(max_length=255, blank=True, null=True)
     title = models.CharField(max_length=255, blank=True, null=True)
@@ -485,9 +439,11 @@ class ContactVersion(models.Model):
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     culture = models.CharField(max_length=32, blank=True, null=True)
     picture_id = models.BigIntegerField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
     class Meta:
@@ -497,14 +453,13 @@ class ContactVersion(models.Model):
 
 
 class Control(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     ticket = models.ForeignKey('Ticket')
     checkpoint = models.ForeignKey(Checkpoint)
     comment = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -519,8 +474,8 @@ class ControlVersion(models.Model):
     ticket_id = models.BigIntegerField()
     checkpoint_id = models.BigIntegerField()
     comment = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -530,7 +485,6 @@ class ControlVersion(models.Model):
 
 
 class Email(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     field_from = models.CharField(max_length=255)
     field_to = models.TextField(blank=True, null=True)
@@ -540,8 +494,8 @@ class Email(models.Model):
     content = models.TextField()
     content_text = models.TextField(blank=True, null=True)
     sent = models.NullBooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -549,48 +503,16 @@ class Email(models.Model):
         db_table = 'email'
 
 
-class EmailAction(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    email = models.ForeignKey(Email)
-    type = models.CharField(max_length=255)
-    contact = models.ForeignKey(Contact, blank=True, null=True)
-    professional = models.ForeignKey('Professional', blank=True, null=True)
-    organism = models.ForeignKey('Organism', blank=True, null=True)
-    detail = models.TextField(blank=True, null=True)
-    source = models.TextField(blank=True, null=True)
-    email_address = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'email_action'
-
-
 class EmailContact(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     email = models.ForeignKey(Email)
     contact = models.ForeignKey(Contact)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'email_contact'
-
-
-class EmailExternalLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    email = models.ForeignKey(Email)
-    original_url = models.CharField(max_length=255)
-    encrypted_uri = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'email_external_link'
 
 
 class EmailIndex(models.Model):
@@ -606,10 +528,9 @@ class EmailIndex(models.Model):
 
 
 class EmailLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     email = models.ForeignKey(Email)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -618,11 +539,10 @@ class EmailLink(models.Model):
 
 
 class EmailOrganism(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     email = models.ForeignKey(Email)
     organism = models.ForeignKey('Organism')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -631,11 +551,10 @@ class EmailOrganism(models.Model):
 
 
 class EmailProfessional(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     email = models.ForeignKey(Email)
     professional = models.ForeignKey('Professional')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -644,33 +563,20 @@ class EmailProfessional(models.Model):
 
 
 class EmailSpool(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     message = models.TextField()
     priority = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'email_spool'
 
 
-class EmailTemplate(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=255)
-    content = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'email_template'
-
-
 class Entry(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     event = models.ForeignKey('Event')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -678,14 +584,12 @@ class Entry(models.Model):
 
 
 class EntryElement(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     manifestation_entry = models.ForeignKey('ManifestationEntry')
     contact_entry = models.ForeignKey(ContactEntry)
     second_choice = models.BooleanField()
     accepted = models.BooleanField()
-    impossible = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -693,13 +597,12 @@ class EntryElement(models.Model):
 
 
 class EntryTickets(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     entry_element = models.ForeignKey(EntryElement)
     price = models.ForeignKey('Price')
     quantity = models.BigIntegerField()
     gauge = models.ForeignKey('Gauge')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -708,7 +611,6 @@ class EntryTickets(models.Model):
 
 
 class Event(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     meta_event = models.ForeignKey('MetaEvent')
@@ -728,9 +630,8 @@ class Event(models.Model):
     display_by_default = models.BooleanField()
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    museum = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -739,11 +640,10 @@ class Event(models.Model):
 
 
 class EventCategory(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(unique=True, max_length=255)
     vat = models.ForeignKey('Vat', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -815,9 +715,8 @@ class EventVersion(models.Model):
     display_by_default = models.BooleanField()
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
     slug = models.CharField(max_length=255, blank=True, null=True)
-    museum = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -828,14 +727,13 @@ class EventVersion(models.Model):
 
 
 class FailedControl(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     ticket_id = models.CharField(max_length=255, blank=True, null=True)
     checkpoint_id = models.BigIntegerField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -850,8 +748,8 @@ class FailedControlVersion(models.Model):
     ticket_id = models.CharField(max_length=255, blank=True, null=True)
     checkpoint_id = models.BigIntegerField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -861,7 +759,6 @@ class FailedControlVersion(models.Model):
 
 
 class FamilialQuotient(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -870,7 +767,6 @@ class FamilialQuotient(models.Model):
 
 
 class FamilialSituation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -879,7 +775,6 @@ class FamilialSituation(models.Model):
 
 
 class Filter(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser')
     type = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
@@ -892,15 +787,14 @@ class Filter(models.Model):
 
 
 class Gauge(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     workspace = models.ForeignKey('Workspace')
     manifestation = models.ForeignKey('Manifestation')
     value = models.BigIntegerField()
     online = models.BooleanField()
     onsite = models.BooleanField()
     group_name = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -909,7 +803,6 @@ class Gauge(models.Model):
 
 
 class GeoFrDepartment(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     geo_fr_region = models.ForeignKey('GeoFrRegion')
     num = models.CharField(unique=True, max_length=3)
     name = models.CharField(max_length=255)
@@ -922,7 +815,6 @@ class GeoFrDepartment(models.Model):
 
 
 class GeoFrRegion(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     strict_name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -936,8 +828,8 @@ class GroupAutoUser(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     sf_guard_user = models.ForeignKey('SfGuardUser')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -949,8 +841,8 @@ class GroupContact(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -959,10 +851,9 @@ class GroupContact(models.Model):
 
 
 class GroupDeleted(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     group = models.ForeignKey('GroupTable')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -972,8 +863,8 @@ class GroupDeleted(models.Model):
 class GroupDetail(models.Model):
     group_id = models.BigIntegerField(primary_key=True)
     information = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -984,8 +875,8 @@ class GroupOrganism(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     organism = models.ForeignKey('Organism')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -997,8 +888,8 @@ class GroupProfessional(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     professional = models.ForeignKey('Professional')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1007,15 +898,14 @@ class GroupProfessional(models.Model):
 
 
 class GroupTable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     slug = models.TextField(blank=True, null=True)
     picture = models.ForeignKey('Picture', blank=True, null=True)
     display_everywhere = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1026,8 +916,8 @@ class GroupUser(models.Model):
     group = models.ForeignKey(GroupTable)
     information = models.TextField(blank=True, null=True)
     sf_guard_user = models.ForeignKey('SfGuardUser')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1036,7 +926,6 @@ class GroupUser(models.Model):
 
 
 class GroupWorkspace(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     workspace = models.ForeignKey('Workspace')
 
     class Meta:
@@ -1045,7 +934,6 @@ class GroupWorkspace(models.Model):
 
 
 class Hold(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     public_name = models.CharField(max_length=255, blank=True, null=True)
@@ -1053,8 +941,8 @@ class Hold(models.Model):
     next = models.ForeignKey('self', db_column='next', blank=True, null=True)
     color = models.CharField(max_length=255, blank=True, null=True)
     price = models.ForeignKey('Price', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1073,15 +961,14 @@ class HoldContent(models.Model):
 
 
 class HoldTransaction(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
     hold = models.ForeignKey(Hold)
     rank = models.FloatField()
     pretickets = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1097,8 +984,8 @@ class HoldTransactionVersion(models.Model):
     hold_id = models.BigIntegerField()
     rank = models.FloatField()
     pretickets = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1130,8 +1017,8 @@ class HoldVersion(models.Model):
     next = models.BigIntegerField(blank=True, null=True)
     color = models.CharField(max_length=255, blank=True, null=True)
     price_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -1142,14 +1029,13 @@ class HoldVersion(models.Model):
 
 
 class Invoice(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
     type = models.CharField(max_length=255, blank=True, null=True)
     manifestation = models.ForeignKey('Manifestation', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1164,8 +1050,8 @@ class InvoiceVersion(models.Model):
     transaction_id = models.BigIntegerField()
     type = models.CharField(max_length=255, blank=True, null=True)
     manifestation_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1175,14 +1061,13 @@ class InvoiceVersion(models.Model):
 
 
 class Itemable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
     vat = models.DecimalField(max_digits=5, decimal_places=4)
     value = models.DecimalField(max_digits=8, decimal_places=3)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1197,8 +1082,8 @@ class ItemableVersion(models.Model):
     transaction_id = models.BigIntegerField()
     vat = models.DecimalField(max_digits=5, decimal_places=4)
     value = models.DecimalField(max_digits=8, decimal_places=3)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1208,7 +1093,6 @@ class ItemableVersion(models.Model):
 
 
 class Jabber(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     jabber_id = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     sf_guard_user = models.ForeignKey('SfGuardUser')
@@ -1219,7 +1103,6 @@ class Jabber(models.Model):
 
 
 class Location(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -1230,8 +1113,6 @@ class Location(models.Model):
     email_npai = models.BooleanField()
     npai = models.BooleanField()
     vcard_uid = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    last_accessor = models.ForeignKey('SfGuardUser', blank=True, null=True)
-    automatic = models.BooleanField()
     rank = models.BigIntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact, blank=True, null=True)
@@ -1240,12 +1121,11 @@ class Location(models.Model):
     gauge_min = models.BigIntegerField(blank=True, null=True)
     reservation_price = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
     place = models.BooleanField()
-    licenses = models.CharField(max_length=255, blank=True, null=True)
-    unlimited = models.NullBooleanField()
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -1253,7 +1133,6 @@ class Location(models.Model):
 
 
 class LocationBooking(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     manifestation = models.ForeignKey('Manifestation')
     location = models.ForeignKey(Location)
 
@@ -1274,43 +1153,7 @@ class LocationIndex(models.Model):
         unique_together = (('keyword', 'field', 'position', 'id'),)
 
 
-class LocationVersion(models.Model):
-    id = models.ForeignKey(Location, db_column='id', primary_key=True)
-    name = models.CharField(max_length=255)
-    address = models.TextField(blank=True, null=True)
-    postalcode = models.CharField(max_length=10, blank=True, null=True)
-    city = models.CharField(max_length=255, blank=True, null=True)
-    country = models.CharField(max_length=255, blank=True, null=True)
-    email = models.CharField(max_length=255, blank=True, null=True)
-    email_no_newsletter = models.BooleanField()
-    email_npai = models.BooleanField()
-    npai = models.BooleanField()
-    vcard_uid = models.CharField(max_length=255, blank=True, null=True)
-    last_accessor_id = models.BigIntegerField(blank=True, null=True)
-    automatic = models.BooleanField()
-    rank = models.BigIntegerField(blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    contact_id = models.BigIntegerField(blank=True, null=True)
-    organism_id = models.BigIntegerField(blank=True, null=True)
-    gauge_max = models.BigIntegerField(blank=True, null=True)
-    gauge_min = models.BigIntegerField(blank=True, null=True)
-    reservation_price = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
-    place = models.BooleanField()
-    licenses = models.CharField(max_length=255, blank=True, null=True)
-    unlimited = models.NullBooleanField()
-    slug = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    version = models.BigIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'location_version'
-        unique_together = (('id', 'version'),)
-
-
 class Manifestation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     event = models.ForeignKey(Event)
@@ -1334,8 +1177,8 @@ class Manifestation(models.Model):
     reservation_confirmed = models.BooleanField()
     expected_income = models.DecimalField(max_digits=15, decimal_places=3, blank=True, null=True)
     voucherized = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1344,7 +1187,6 @@ class Manifestation(models.Model):
 
 
 class ManifestationContact(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     contact_id = models.BigIntegerField()
     manifestation_id = models.BigIntegerField()
 
@@ -1354,11 +1196,10 @@ class ManifestationContact(models.Model):
 
 
 class ManifestationEntry(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     manifestation = models.ForeignKey(Manifestation)
     entry = models.ForeignKey(Entry)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1367,15 +1208,14 @@ class ManifestationEntry(models.Model):
 
 
 class ManifestationExtraInformation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
     checked = models.BooleanField()
     manifestation = models.ForeignKey(Manifestation)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1391,8 +1231,8 @@ class ManifestationExtraInformationVersion(models.Model):
     value = models.CharField(max_length=255)
     checked = models.BooleanField()
     manifestation_id = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1436,8 +1276,8 @@ class ManifestationVersion(models.Model):
     reservation_confirmed = models.BooleanField()
     expected_income = models.DecimalField(max_digits=15, decimal_places=3, blank=True, null=True)
     voucherized = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1447,7 +1287,6 @@ class ManifestationVersion(models.Model):
 
 
 class MemberCard(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     contact = models.ForeignKey(Contact, blank=True, null=True)
@@ -1455,9 +1294,8 @@ class MemberCard(models.Model):
     active = models.BooleanField()
     member_card_type = models.ForeignKey('MemberCardType')
     transaction = models.ForeignKey('Transaction', blank=True, null=True)
-    checks_count = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1466,14 +1304,13 @@ class MemberCard(models.Model):
 
 
 class MemberCardPrice(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     member_card = models.ForeignKey(MemberCard)
     price = models.ForeignKey('Price')
     event = models.ForeignKey(Event, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1482,16 +1319,14 @@ class MemberCardPrice(models.Model):
 
 
 class MemberCardPriceModel(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     member_card_type = models.ForeignKey('MemberCardType')
     price = models.ForeignKey('Price')
     quantity = models.BigIntegerField()
     event = models.ForeignKey(Event, blank=True, null=True)
-    autoadd = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1508,9 +1343,8 @@ class MemberCardPriceModelVersion(models.Model):
     price_id = models.BigIntegerField()
     quantity = models.BigIntegerField()
     event_id = models.BigIntegerField(blank=True, null=True)
-    autoadd = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1526,8 +1360,8 @@ class MemberCardPriceVersion(models.Model):
     member_card_id = models.BigIntegerField()
     price_id = models.BigIntegerField()
     event_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1537,9 +1371,7 @@ class MemberCardPriceVersion(models.Model):
 
 
 class MemberCardType(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(unique=True, max_length=255)
-    public_details = models.TextField(blank=True, null=True)
     value = models.DecimalField(max_digits=8, decimal_places=3)
     product_declination = models.ForeignKey('ProductDeclination', blank=True, null=True)
     price = models.ForeignKey('Price', blank=True, null=True)
@@ -1580,9 +1412,8 @@ class MemberCardVersion(models.Model):
     active = models.BooleanField()
     member_card_type_id = models.BigIntegerField()
     transaction_id = models.BigIntegerField(blank=True, null=True)
-    checks_count = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1594,25 +1425,13 @@ class MemberCardVersion(models.Model):
 class MetaEvent(models.Model):
     name = models.CharField(unique=True, max_length=255)
     hide_in_month_calendars = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'meta_event'
-
-
-class MetaEventTranslation(models.Model):
-    id = models.ForeignKey(MetaEvent, db_column='id', primary_key=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    lang = models.CharField(max_length=2)
-
-    class Meta:
-        managed = False
-        db_table = 'meta_event_translation'
-        unique_together = (('id', 'lang'), ('name', 'lang'),)
 
 
 class MetaEventUser(models.Model):
@@ -1626,11 +1445,10 @@ class MetaEventUser(models.Model):
 
 
 class ModelType(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     type = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1640,12 +1458,11 @@ class ModelType(models.Model):
 
 
 class OptionTable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     type = models.CharField(max_length=255)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     name = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1654,14 +1471,13 @@ class OptionTable(models.Model):
 
 
 class OrderTable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
     type = models.CharField(max_length=255, blank=True, null=True)
     manifestation = models.ForeignKey(Manifestation, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1676,8 +1492,8 @@ class OrderVersion(models.Model):
     transaction_id = models.BigIntegerField()
     type = models.CharField(max_length=255, blank=True, null=True)
     manifestation_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1687,27 +1503,26 @@ class OrderVersion(models.Model):
 
 
 class Organism(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
     email = models.CharField(max_length=255, blank=True, null=True)
-    email_no_newsletter = models.BooleanField()
-    email_npai = models.BooleanField()
-    npai = models.BooleanField()
+    email_no_newsletter = models.BooleanField(default=False)
+    email_npai = models.BooleanField(default=False)
+    npai = models.BooleanField(default=False)
     vcard_uid = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    last_accessor = models.ForeignKey('SfGuardUser', blank=True, null=True)
-    automatic = models.BooleanField()
     url = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     organism_category = models.ForeignKey('OrganismCategory', blank=True, null=True)
     administrative_number = models.CharField(max_length=255, blank=True, null=True)
     professional = models.ForeignKey('Professional', blank=True, null=True, related_name='organism_professional')
-    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1716,10 +1531,9 @@ class Organism(models.Model):
 
 
 class OrganismCategory(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
     class Meta:
@@ -1740,12 +1554,11 @@ class OrganismIndex(models.Model):
 
 
 class OrganismPhonenumber(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     number = models.CharField(max_length=255)
     organism = models.ForeignKey(Organism)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1764,16 +1577,16 @@ class OrganismVersion(models.Model):
     email_npai = models.BooleanField()
     npai = models.BooleanField()
     vcard_uid = models.CharField(max_length=255, blank=True, null=True)
-    last_accessor_id = models.BigIntegerField(blank=True, null=True)
-    automatic = models.BooleanField()
     url = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     organism_category_id = models.BigIntegerField(blank=True, null=True)
     administrative_number = models.CharField(max_length=255, blank=True, null=True)
     professional_id = models.BigIntegerField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
     class Meta:
@@ -1783,7 +1596,6 @@ class OrganismVersion(models.Model):
 
 
 class Payment(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
@@ -1791,8 +1603,8 @@ class Payment(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=3)
     member_card = models.ForeignKey(MemberCard, blank=True, null=True)
     detail = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1801,7 +1613,6 @@ class Payment(models.Model):
 
 
 class PaymentMethod(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     account = models.CharField(max_length=63, blank=True, null=True)
     display = models.BooleanField()
@@ -1821,8 +1632,8 @@ class PaymentVersion(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=3)
     member_card_id = models.BigIntegerField(blank=True, null=True)
     detail = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1832,7 +1643,7 @@ class PaymentVersion(models.Model):
 
 
 class Phonenumber(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+
     name = models.CharField(max_length=255, blank=True, null=True)
     number = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -1844,15 +1655,14 @@ class Phonenumber(models.Model):
 
 
 class Picture(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     content = models.BinaryField()
     width = models.BigIntegerField(blank=True, null=True)
     height = models.BigIntegerField(blank=True, null=True)
     content_encoding = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -1868,8 +1678,8 @@ class PictureVersion(models.Model):
     width = models.BigIntegerField(blank=True, null=True)
     height = models.BigIntegerField(blank=True, null=True)
     content_encoding = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -1879,7 +1689,6 @@ class PictureVersion(models.Model):
 
 
 class Postalcode(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     postalcode = models.CharField(max_length=7)
     city = models.CharField(max_length=255)
 
@@ -1889,13 +1698,12 @@ class Postalcode(models.Model):
 
 
 class Price(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     value = models.DecimalField(max_digits=8, decimal_places=2)
     online = models.BooleanField()
     hide = models.BooleanField()
     member_card_linked = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1903,12 +1711,11 @@ class Price(models.Model):
 
 
 class PriceGauge(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     gauge = models.ForeignKey(Gauge)
     price = models.ForeignKey(Price)
     value = models.DecimalField(max_digits=8, decimal_places=3)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1917,12 +1724,11 @@ class PriceGauge(models.Model):
 
 
 class PriceManifestation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     manifestation = models.ForeignKey(Manifestation)
     price = models.ForeignKey(Price)
     value = models.DecimalField(max_digits=8, decimal_places=3)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1931,10 +1737,9 @@ class PriceManifestation(models.Model):
 
 
 class PricePOS(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     price = models.ForeignKey(Price)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1942,12 +1747,11 @@ class PricePOS(models.Model):
 
 
 class PriceProduct(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product = models.ForeignKey('Product')
     price = models.ForeignKey(Price)
     value = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -1968,7 +1772,6 @@ class PriceTranslation(models.Model):
 
 
 class Product(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     meta_event = models.ForeignKey(MetaEvent, blank=True, null=True)
@@ -1979,11 +1782,8 @@ class Product(models.Model):
     shipping_fees = models.DecimalField(max_digits=8, decimal_places=2)
     shipping_fees_vat = models.ForeignKey('Vat', blank=True, null=True, related_name='product_fees_vat')
     online = models.BooleanField()
-    use_stock = models.BooleanField()
-    online_limit = models.BigIntegerField()
-    online_limit_per_transaction = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
@@ -1993,12 +1793,11 @@ class Product(models.Model):
 
 
 class ProductCategory(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     vat = models.ForeignKey('Vat', blank=True, null=True)
     online = models.BooleanField()
     product_category = models.ForeignKey('self', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
     class Meta:
@@ -2030,18 +1829,13 @@ class ProductCategoryTranslation(models.Model):
 
 
 class ProductDeclination(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     code = models.CharField(unique=True, max_length=50, blank=True, null=True)
     product = models.ForeignKey(Product)
     prioritary = models.NullBooleanField()
-    use_stock = models.BooleanField()
-    stock = models.BigIntegerField()
-    stock_perfect = models.BigIntegerField()
-    stock_critical = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2084,12 +1878,8 @@ class ProductDeclinationVersion(models.Model):
     description_for_buyers = models.TextField(blank=True, null=True)
     product_id = models.BigIntegerField()
     prioritary = models.NullBooleanField()
-    use_stock = models.BooleanField()
-    stock = models.BigIntegerField()
-    stock_perfect = models.BigIntegerField()
-    stock_critical = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -2112,11 +1902,10 @@ class ProductIndex(models.Model):
 
 
 class ProductLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk_id = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2124,11 +1913,10 @@ class ProductLink(models.Model):
 
 
 class ProductManifestationLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk = models.ForeignKey(Manifestation)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2136,11 +1924,10 @@ class ProductManifestationLink(models.Model):
 
 
 class ProductMetaEventLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk = models.ForeignKey(MetaEvent)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2148,11 +1935,10 @@ class ProductMetaEventLink(models.Model):
 
 
 class ProductPriceLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk_id = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2160,11 +1946,10 @@ class ProductPriceLink(models.Model):
 
 
 class ProductProductLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk_id = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2199,11 +1984,8 @@ class ProductVersion(models.Model):
     shipping_fees = models.DecimalField(max_digits=8, decimal_places=2)
     shipping_fees_vat_id = models.BigIntegerField(blank=True, null=True)
     online = models.BooleanField()
-    use_stock = models.BooleanField()
-    online_limit = models.BigIntegerField()
-    online_limit_per_transaction = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -2214,11 +1996,10 @@ class ProductVersion(models.Model):
 
 
 class ProductWorkspaceLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     product_id = models.BigIntegerField()
     fk = models.ForeignKey('Workspace')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2226,15 +2007,14 @@ class ProductWorkspaceLink(models.Model):
 
 
 class Professional(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     organism = models.ForeignKey(Organism, related_name='professional_organism')
     contact = models.ForeignKey(Contact)
     professional_type = models.ForeignKey('ProfessionalType', blank=True, null=True)
     contact_number = models.CharField(max_length=255, blank=True, null=True)
     contact_email = models.CharField(max_length=255, blank=True, null=True)
-    contact_email_no_newsletter = models.BooleanField()
-    contact_email_npai = models.BooleanField()
+    contact_email_no_newsletter = models.BooleanField(default=False)
+    contact_email_npai = models.BooleanField(default=False)
     department = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2245,51 +2025,10 @@ class Professional(models.Model):
         db_table = 'professional'
 
 
-class ProfessionalArchive(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    organism = models.ForeignKey(Organism)
-    contact = models.ForeignKey(Contact)
-    professional_type = models.ForeignKey('ProfessionalType', blank=True, null=True)
-    contact_number = models.CharField(max_length=255, blank=True, null=True)
-    contact_email = models.CharField(max_length=255, blank=True, null=True)
-    contact_email_no_newsletter = models.BooleanField()
-    contact_email_npai = models.BooleanField()
-    department = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'professional_archive'
-
-
-class ProfessionalBase(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    organism_id = models.BigIntegerField()
-    contact_id = models.BigIntegerField()
-    professional_type_id = models.BigIntegerField(blank=True, null=True)
-    contact_number = models.CharField(max_length=255, blank=True, null=True)
-    contact_email = models.CharField(max_length=255, blank=True, null=True)
-    contact_email_no_newsletter = models.BooleanField()
-    contact_email_npai = models.BooleanField()
-    department = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'professional_base'
-
-
 class ProfessionalType(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2297,15 +2036,14 @@ class ProfessionalType(models.Model):
 
 
 class RawAccounting(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField()
     accounting_id = models.BigIntegerField(blank=True, null=True)
     order = models.ForeignKey(OrderTable, blank=True, null=True)
     invoice = models.ForeignKey(Invoice, blank=True, null=True)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2321,8 +2059,8 @@ class RawAccountingVersion(models.Model):
     order_id = models.BigIntegerField(blank=True, null=True)
     invoice_id = models.BigIntegerField(blank=True, null=True)
     content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2332,13 +2070,12 @@ class RawAccountingVersion(models.Model):
 
 
 class RemoteAuthentication(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey('SfGuardUser')
     ipaddress = models.CharField(max_length=255)
     active = models.BooleanField()
     salt = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2347,7 +2084,6 @@ class RemoteAuthentication(models.Model):
 
 
 class Seat(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     seated_plan = models.ForeignKey('SeatedPlan')
     name = models.CharField(max_length=255)
     rank = models.BigIntegerField()
@@ -2355,8 +2091,8 @@ class Seat(models.Model):
     y = models.BigIntegerField()
     diameter = models.BigIntegerField()
     class_field = models.CharField(db_column='class', max_length=255, blank=True, null=True)  # Field renamed because it was a Python reserved word.
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2365,9 +2101,8 @@ class Seat(models.Model):
 
 
 class SeatLink(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    seat1 = models.ForeignKey(Seat, db_column='seat1', related_name='seatlink_seat_1')
-    seat2 = models.ForeignKey(Seat, db_column='seat2', related_name='seatlink_seat_2')
+    seat1 = models.BigIntegerField()
+    seat2 = models.BigIntegerField()
 
     class Meta:
         managed = False
@@ -2375,7 +2110,6 @@ class SeatLink(models.Model):
 
 
 class SeatedPlan(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     seat_diameter = models.BigIntegerField()
     description = models.TextField(blank=True, null=True)
     picture = models.ForeignKey(Picture, blank=True, null=True, related_name='seatedplan_picture')
@@ -2383,8 +2117,8 @@ class SeatedPlan(models.Model):
     location = models.ForeignKey(Location, blank=True, null=True)
     background = models.CharField(max_length=255, blank=True, null=True)
     ideal_width = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2401,8 +2135,8 @@ class SeatedPlanVersion(models.Model):
     location_id = models.BigIntegerField(blank=True, null=True)
     background = models.CharField(max_length=255, blank=True, null=True)
     ideal_width = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2412,7 +2146,6 @@ class SeatedPlanVersion(models.Model):
 
 
 class SeatedPlanWorkspace(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     seated_plan = models.ForeignKey(SeatedPlan)
     workspace = models.ForeignKey('Workspace')
 
@@ -2422,12 +2155,11 @@ class SeatedPlanWorkspace(models.Model):
 
 
 class SfGuardForgotPassword(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     user = models.ForeignKey('SfGuardUser')
     unique_key = models.CharField(max_length=255, blank=True, null=True)
     expires_at = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2435,11 +2167,10 @@ class SfGuardForgotPassword(models.Model):
 
 
 class SfGuardGroup(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(unique=True, max_length=255, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2449,8 +2180,8 @@ class SfGuardGroup(models.Model):
 class SfGuardGroupPermission(models.Model):
     group = models.ForeignKey(SfGuardGroup)
     permission = models.ForeignKey('SfGuardPermission')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2459,11 +2190,10 @@ class SfGuardGroupPermission(models.Model):
 
 
 class SfGuardPermission(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(unique=True, max_length=255, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2471,12 +2201,11 @@ class SfGuardPermission(models.Model):
 
 
 class SfGuardRememberKey(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     remember_key = models.CharField(max_length=32, blank=True, null=True)
     ip_address = models.CharField(max_length=50, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2484,7 +2213,6 @@ class SfGuardRememberKey(models.Model):
 
 
 class SfGuardUser(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     email_address = models.CharField(unique=True, max_length=255)
@@ -2495,8 +2223,8 @@ class SfGuardUser(models.Model):
     is_active = models.NullBooleanField()
     is_super_admin = models.NullBooleanField()
     last_login = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2506,8 +2234,8 @@ class SfGuardUser(models.Model):
 class SfGuardUserGroup(models.Model):
     user = models.ForeignKey(SfGuardUser)
     group = models.ForeignKey(SfGuardGroup)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2518,8 +2246,8 @@ class SfGuardUserGroup(models.Model):
 class SfGuardUserPermission(models.Model):
     user = models.ForeignKey(SfGuardUser)
     permission = models.ForeignKey(SfGuardPermission)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -2528,7 +2256,6 @@ class SfGuardUserPermission(models.Model):
 
 
 class SlavePing(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     state = models.CharField(max_length=255)
     created_at = models.DateTimeField(blank=True, null=True)
 
@@ -2538,13 +2265,12 @@ class SlavePing(models.Model):
 
 
 class Survey(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     name = models.CharField(max_length=255)
     weight = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2553,15 +2279,14 @@ class Survey(models.Model):
 
 
 class SurveyAnswer(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     survey_query = models.ForeignKey('SurveyQuery')
     survey_answers_group = models.ForeignKey('SurveyAnswersGroup')
     lang = models.CharField(max_length=255)
     value = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2589,8 +2314,8 @@ class SurveyAnswerVersion(models.Model):
     survey_answers_group_id = models.BigIntegerField()
     lang = models.CharField(max_length=255)
     value = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2600,15 +2325,14 @@ class SurveyAnswerVersion(models.Model):
 
 
 class SurveyAnswersGroup(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     survey = models.ForeignKey(Survey)
     contact = models.ForeignKey(Contact, blank=True, null=True)
     professional = models.ForeignKey(Professional, blank=True, null=True)
     transaction = models.ForeignKey('Transaction', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2624,8 +2348,8 @@ class SurveyAnswersGroupVersion(models.Model):
     contact_id = models.BigIntegerField(blank=True, null=True)
     professional_id = models.BigIntegerField(blank=True, null=True)
     transaction_id = models.BigIntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2635,7 +2359,6 @@ class SurveyAnswersGroupVersion(models.Model):
 
 
 class SurveyApplyTo(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     survey = models.ForeignKey(Survey)
@@ -2647,8 +2370,8 @@ class SurveyApplyTo(models.Model):
     professional = models.ForeignKey(Professional, blank=True, null=True)
     organism = models.ForeignKey(Organism, blank=True, null=True)
     everywhere = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2669,8 +2392,8 @@ class SurveyApplyToVersion(models.Model):
     professional_id = models.BigIntegerField(blank=True, null=True)
     organism_id = models.BigIntegerField(blank=True, null=True)
     everywhere = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2692,7 +2415,6 @@ class SurveyIndex(models.Model):
 
 
 class SurveyQuery(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     survey = models.ForeignKey(Survey)
@@ -2701,8 +2423,8 @@ class SurveyQuery(models.Model):
     weight = models.BigIntegerField()
     rank = models.BigIntegerField()
     stats = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
@@ -2724,7 +2446,6 @@ class SurveyQueryIndex(models.Model):
 
 
 class SurveyQueryOption(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     survey_query = models.ForeignKey(SurveyQuery)
     value = models.CharField(max_length=255)
 
@@ -2766,8 +2487,8 @@ class SurveyQueryVersion(models.Model):
     weight = models.BigIntegerField()
     rank = models.BigIntegerField()
     stats = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -2795,8 +2516,8 @@ class SurveyVersion(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     weight = models.BigIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
@@ -2807,15 +2528,13 @@ class SurveyVersion(models.Model):
 
 
 class Tax(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     value = models.FloatField()
-    with_shipment = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2824,7 +2543,6 @@ class Tax(models.Model):
 
 
 class TaxManifestation(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     tax_id = models.BigIntegerField()
     manifestation = models.ForeignKey(Manifestation)
 
@@ -2834,7 +2552,6 @@ class TaxManifestation(models.Model):
 
 
 class TaxPrice(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     tax = models.ForeignKey(Tax)
     price_id = models.BigIntegerField()
 
@@ -2844,7 +2561,6 @@ class TaxPrice(models.Model):
 
 
 class TaxUser(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     tax = models.ForeignKey(Tax)
     sf_guard_user_id = models.BigIntegerField()
 
@@ -2860,9 +2576,8 @@ class TaxVersion(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     value = models.FloatField()
-    with_shipment = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2872,7 +2587,6 @@ class TaxVersion(models.Model):
 
 
 class Ticket(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     transaction = models.ForeignKey('Transaction')
@@ -2895,8 +2609,8 @@ class Ticket(models.Model):
     contact = models.ForeignKey(Contact, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     auto_by_hold = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2929,8 +2643,8 @@ class TicketVersion(models.Model):
     contact_id = models.BigIntegerField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     auto_by_hold = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2940,11 +2654,10 @@ class TicketVersion(models.Model):
 
 
 class Traceable(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -2956,8 +2669,8 @@ class TraceableVersion(models.Model):
     id = models.ForeignKey(Traceable, db_column='id', primary_key=True)
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -2967,7 +2680,6 @@ class TraceableVersion(models.Model):
 
 
 class Transaction(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     contact = models.ForeignKey(Contact, blank=True, null=True)
@@ -2979,8 +2691,8 @@ class Transaction(models.Model):
     send_an_email = models.BooleanField()
     deposit = models.BooleanField()
     with_shipment = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -3001,17 +2713,17 @@ class TransactionVersion(models.Model):
     send_an_email = models.BooleanField()
     deposit = models.BooleanField()
     with_shipment = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
         managed = False
         db_table = 'transaction_version'
+        unique_together = (('id', 'version'),)
 
 
 class TypeOfResources(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
@@ -3030,12 +2742,11 @@ class UserPrice(models.Model):
 
 
 class Vat(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=64)
     value = models.DecimalField(max_digits=5, decimal_places=4)
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -3048,8 +2759,8 @@ class VatVersion(models.Model):
     name = models.CharField(max_length=64)
     value = models.DecimalField(max_digits=5, decimal_places=4)
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -3059,7 +2770,6 @@ class VatVersion(models.Model):
 
 
 class WebOrigin(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser, blank=True, null=True)
     automatic = models.BooleanField()
     first_page = models.TextField()
@@ -3068,8 +2778,8 @@ class WebOrigin(models.Model):
     campaign = models.TextField(blank=True, null=True)
     transaction = models.ForeignKey(Transaction)
     user_agent = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
@@ -3078,7 +2788,6 @@ class WebOrigin(models.Model):
 
 
 class WebOriginIp(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     ipaddress = models.CharField(max_length=40)
     name = models.CharField(max_length=255)
 
@@ -3097,8 +2806,8 @@ class WebOriginVersion(models.Model):
     campaign = models.TextField(blank=True, null=True)
     transaction_id = models.BigIntegerField()
     user_agent = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
     version = models.BigIntegerField()
 
     class Meta:
@@ -3108,12 +2817,11 @@ class WebOriginVersion(models.Model):
 
 
 class Workspace(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(unique=True, max_length=255)
     on_ticket = models.CharField(max_length=255, blank=True, null=True)
     seated = models.BooleanField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField()
+    updated_at = models.DateTimeField()
 
     class Meta:
         managed = False
@@ -3141,7 +2849,6 @@ class WorkspaceUser(models.Model):
 
 
 class WorkspaceUserOrdering(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     sf_guard_user = models.ForeignKey(SfGuardUser)
     workspace = models.ForeignKey(Workspace)
     rank = models.BigIntegerField()
@@ -3153,7 +2860,6 @@ class WorkspaceUserOrdering(models.Model):
 
 
 class YOB(models.Model):
-    id = models.BigIntegerField(primary_key=True)
     year = models.BigIntegerField(blank=True, null=True)
     month = models.BigIntegerField(blank=True, null=True)
     day = models.BigIntegerField(blank=True, null=True)
@@ -3167,4 +2873,4 @@ class YOB(models.Model):
         db_table = 'y_o_b'
 
 
-# auditlog.register(Contact)
+auditlog.register(Contact)

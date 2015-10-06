@@ -908,7 +908,7 @@ class GroupAutoUser(models.Model):
 
 
 class GroupContact(models.Model):
-    group = models.ForeignKey('GroupTable')
+    group = models.ForeignKey('GroupTable', primary_key=True)
     information = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -942,7 +942,7 @@ class GroupDetail(models.Model):
 
 
 class GroupOrganism(models.Model):
-    group = models.ForeignKey('GroupTable')
+    group = models.ForeignKey('GroupTable', primary_key=True)
     information = models.TextField(blank=True, null=True)
     organism = models.ForeignKey('Organism')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -955,7 +955,7 @@ class GroupOrganism(models.Model):
 
 
 class GroupProfessional(models.Model):
-    group = models.ForeignKey('GroupTable')
+    group = models.ForeignKey('GroupTable', primary_key=True)
     information = models.TextField(blank=True, null=True)
     professional = models.ForeignKey('Professional')
     created_at = models.DateTimeField(auto_now_add=True)

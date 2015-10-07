@@ -13,6 +13,11 @@ from django.db import models
 from auditlog.registry import auditlog
 
 
+class MetaCore:
+
+    app_label = 'eve'
+
+
 class Accounting(models.Model):
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField(default=False)
@@ -23,7 +28,7 @@ class Accounting(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'accounting'
 
@@ -39,7 +44,7 @@ class AccountingVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'accounting_version'
         unique_together = (('id', 'version'),)
@@ -63,7 +68,7 @@ class Addressable(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'addressable'
 
@@ -74,7 +79,7 @@ class AddressableIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Addressable, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'addressable_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -99,7 +104,7 @@ class AddressableVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'addressable_version'
         unique_together = (('id', 'version'),)
@@ -115,7 +120,7 @@ class Attachment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'attachment'
 
@@ -129,7 +134,7 @@ class AttachmentVersion(models.Model):
     size = models.FloatField()
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'attachment_version'
         unique_together = (('id', 'version'),)
@@ -144,7 +149,7 @@ class Authentication(models.Model):
     success = models.NullBooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'authentication'
 
@@ -152,7 +157,7 @@ class Authentication(models.Model):
 class AutoGroup(models.Model):
     group = models.ForeignKey('GroupTable')
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'auto_group'
 
@@ -196,7 +201,7 @@ class BankPayment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'bank_payment'
 
@@ -226,7 +231,7 @@ class BoughtProduct(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'bought_product'
 
@@ -257,7 +262,7 @@ class BoughtProductVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'bought_product_version'
         unique_together = (('id', 'version'),)
@@ -272,7 +277,7 @@ class Cancellation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'cancellation'
 
@@ -287,7 +292,7 @@ class CancellationVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'cancellation_version'
         unique_together = (('id', 'version'),)
@@ -306,7 +311,7 @@ class Checkpoint(models.Model):
     longitude = models.FloatField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'checkpoint'
 
@@ -317,7 +322,7 @@ class Color(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'color'
 
@@ -355,7 +360,7 @@ class Contact(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact'
 
@@ -364,7 +369,7 @@ class ContactArchive(models.Model):
     contact = models.ForeignKey(Contact)
     old_id = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_archive'
 
@@ -379,7 +384,7 @@ class ContactEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_entry'
 
@@ -389,7 +394,7 @@ class ContactEventArchives(models.Model):
     happens_at = models.DateTimeField()
     name = models.TextField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_event_archives'
 
@@ -400,7 +405,7 @@ class ContactIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey('Contact', db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -413,7 +418,7 @@ class ContactPhonenumber(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_phonenumber'
 
@@ -425,7 +430,7 @@ class ContactRelationship(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_relationship'
 
@@ -435,7 +440,7 @@ class ContactRelationshipType(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_relationship_type'
 
@@ -474,7 +479,7 @@ class ContactVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'contact_version'
         unique_together = (('id', 'version'),)
@@ -490,7 +495,7 @@ class Control(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'control'
 
@@ -506,7 +511,7 @@ class ControlVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'control_version'
         unique_together = (('id', 'version'),)
@@ -526,7 +531,7 @@ class Email(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email'
 
@@ -543,7 +548,7 @@ class EmailAction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_action'
 
@@ -555,7 +560,7 @@ class EmailContact(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_contact'
 
@@ -567,7 +572,7 @@ class EmailExternalLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_external_link'
 
@@ -578,7 +583,7 @@ class EmailIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Email, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -590,7 +595,7 @@ class EmailLink(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_link'
 
@@ -602,7 +607,7 @@ class EmailOrganism(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_organism'
 
@@ -614,7 +619,7 @@ class EmailProfessional(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_professional'
 
@@ -625,7 +630,7 @@ class EmailSpool(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_spool'
 
@@ -635,7 +640,7 @@ class EmailTemplate(models.Model):
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'email_template'
 
@@ -645,7 +650,7 @@ class Entry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'entry'
 
@@ -659,7 +664,7 @@ class EntryElement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'entry_element'
 
@@ -672,7 +677,7 @@ class EntryTickets(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'entry_tickets'
         unique_together = (('entry_element', 'price'),)
@@ -703,7 +708,7 @@ class Event(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event'
 
@@ -714,7 +719,7 @@ class EventCategory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event_category'
 
@@ -723,7 +728,7 @@ class EventCompany(models.Model):
     organism = models.ForeignKey('Organism')
     event = models.ForeignKey(Event)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event_company'
         unique_together = (('organism', 'event'),)
@@ -735,7 +740,7 @@ class EventIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Event, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -751,7 +756,7 @@ class EventTranslation(models.Model):
     extraspec = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event_translation'
         unique_together = (('id', 'lang'),)
@@ -790,7 +795,7 @@ class EventVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'event_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -806,7 +811,7 @@ class FailedControl(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'failed_control'
 
@@ -822,7 +827,7 @@ class FailedControlVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'failed_control_version'
         unique_together = (('id', 'version'),)
@@ -831,7 +836,7 @@ class FailedControlVersion(models.Model):
 class FamilialQuotient(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'familial_quotient'
 
@@ -839,7 +844,7 @@ class FamilialQuotient(models.Model):
 class FamilialSituation(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'familial_situation'
 
@@ -850,7 +855,7 @@ class Filter(models.Model):
     name = models.CharField(max_length=255)
     filter = models.TextField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'filter'
         unique_together = (('name', 'type', 'sf_guard_user'),)
@@ -866,7 +871,7 @@ class Gauge(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'gauge'
         unique_together = (('manifestation', 'workspace'),)
@@ -879,7 +884,7 @@ class GeoFrDepartment(models.Model):
     strict_name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'geo_fr_department'
 
@@ -889,7 +894,7 @@ class GeoFrRegion(models.Model):
     strict_name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'geo_fr_region'
 
@@ -901,7 +906,7 @@ class GroupAutoUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_auto_user'
         unique_together = (('group', 'sf_guard_user'),)
@@ -914,7 +919,7 @@ class GroupContact(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_contact'
         unique_together = (('group', 'contact'),)
@@ -925,7 +930,7 @@ class GroupDeleted(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_deleted'
 
@@ -936,7 +941,7 @@ class GroupDetail(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_detail'
 
@@ -948,7 +953,7 @@ class GroupOrganism(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_organism'
         unique_together = (('group', 'organism'),)
@@ -961,7 +966,7 @@ class GroupProfessional(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_professional'
         unique_together = (('group', 'professional'),)
@@ -977,7 +982,7 @@ class GroupTable(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_table'
 
@@ -989,7 +994,7 @@ class GroupUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_user'
         unique_together = (('group', 'sf_guard_user'),)
@@ -998,7 +1003,7 @@ class GroupUser(models.Model):
 class GroupWorkspace(models.Model):
     workspace = models.ForeignKey('Workspace')
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'group_workspace'
 
@@ -1015,7 +1020,7 @@ class Hold(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold'
 
@@ -1024,7 +1029,7 @@ class HoldContent(models.Model):
     seat = models.ForeignKey('Seat')
     hold = models.ForeignKey(Hold)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold_content'
         unique_together = (('seat', 'hold'),)
@@ -1041,7 +1046,7 @@ class HoldTransaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold_transaction'
 
@@ -1058,7 +1063,7 @@ class HoldTransactionVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold_transaction_version'
         unique_together = (('id', 'version'),)
@@ -1070,7 +1075,7 @@ class HoldTranslation(models.Model):
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold_translation'
         unique_together = (('id', 'lang'),)
@@ -1092,7 +1097,7 @@ class HoldVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'hold_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -1108,7 +1113,7 @@ class Invoice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'invoice'
 
@@ -1124,7 +1129,7 @@ class InvoiceVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'invoice_version'
         unique_together = (('id', 'version'),)
@@ -1140,7 +1145,7 @@ class Itemable(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'itemable'
 
@@ -1156,7 +1161,7 @@ class ItemableVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'itemable_version'
         unique_together = (('id', 'version'),)
@@ -1167,7 +1172,7 @@ class Jabber(models.Model):
     password = models.CharField(max_length=255)
     sf_guard_user = models.ForeignKey('SfGuardUser')
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'jabber'
 
@@ -1200,7 +1205,7 @@ class Location(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'location'
 
@@ -1209,7 +1214,7 @@ class LocationBooking(models.Model):
     manifestation = models.ForeignKey('Manifestation')
     location = models.ForeignKey(Location)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'location_booking'
 
@@ -1220,7 +1225,7 @@ class LocationIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Location, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'location_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -1255,7 +1260,7 @@ class LocationVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'location_version'
         unique_together = (('id', 'version'),)
@@ -1289,7 +1294,7 @@ class Manifestation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation'
 
@@ -1298,7 +1303,7 @@ class ManifestationContact(models.Model):
     contact_id = models.BigIntegerField()
     manifestation_id = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_contact'
 
@@ -1309,7 +1314,7 @@ class ManifestationEntry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_entry'
         unique_together = (('manifestation', 'entry'),)
@@ -1326,7 +1331,7 @@ class ManifestationExtraInformation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_extra_information'
 
@@ -1343,7 +1348,7 @@ class ManifestationExtraInformationVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_extra_information_version'
         unique_together = (('id', 'version'),)
@@ -1353,7 +1358,7 @@ class ManifestationOrganizer(models.Model):
     organism = models.ForeignKey('Organism')
     manifestation = models.ForeignKey(Manifestation)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_organizer'
         unique_together = (('organism', 'manifestation'),)
@@ -1388,7 +1393,7 @@ class ManifestationVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'manifestation_version'
         unique_together = (('id', 'version'),)
@@ -1407,7 +1412,7 @@ class MemberCard(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card'
 
@@ -1422,7 +1427,7 @@ class MemberCardPrice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_price'
 
@@ -1439,7 +1444,7 @@ class MemberCardPriceModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_price_model'
         unique_together = (('member_card_type', 'price', 'event'),)
@@ -1458,7 +1463,7 @@ class MemberCardPriceModelVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_price_model_version'
         unique_together = (('id', 'version'),)
@@ -1475,7 +1480,7 @@ class MemberCardPriceVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_price_version'
         unique_together = (('id', 'version'),)
@@ -1489,7 +1494,7 @@ class MemberCardType(models.Model):
     price = models.ForeignKey('Price', blank=True, null=True)
     nb_tickets_mini = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_type'
 
@@ -1499,7 +1504,7 @@ class MemberCardTypeTranslation(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_type_translation'
         unique_together = (('id', 'lang'),)
@@ -1509,7 +1514,7 @@ class MemberCardTypeUser(models.Model):
     sf_guard_user = models.ForeignKey('SfGuardUser')
     member_card_type = models.ForeignKey(MemberCardType)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_type_user'
         unique_together = (('sf_guard_user', 'member_card_type'),)
@@ -1529,7 +1534,7 @@ class MemberCardVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'member_card_version'
         unique_together = (('id', 'version'),)
@@ -1542,7 +1547,7 @@ class MetaEvent(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'meta_event'
 
@@ -1553,7 +1558,7 @@ class MetaEventTranslation(models.Model):
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'meta_event_translation'
         unique_together = (('id', 'lang'), ('name', 'lang'),)
@@ -1563,7 +1568,7 @@ class MetaEventUser(models.Model):
     sf_guard_user = models.ForeignKey('SfGuardUser')
     meta_event_id = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'meta_event_user'
         unique_together = (('sf_guard_user', 'meta_event_id'),)
@@ -1576,7 +1581,7 @@ class ModelType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'model_type'
         unique_together = (('name', 'type'),)
@@ -1589,7 +1594,7 @@ class OptionTable(models.Model):
     value = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'option_table'
         unique_together = (('name', 'sf_guard_user', 'value', 'type'), ('name', 'sf_guard_user', 'value', 'type'), ('name', 'sf_guard_user', 'value', 'type'), ('name', 'sf_guard_user', 'value', 'type'),)
@@ -1605,7 +1610,7 @@ class OrderTable(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'order_table'
 
@@ -1621,7 +1626,7 @@ class OrderVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'order_version'
         unique_together = (('id', 'version'),)
@@ -1650,7 +1655,7 @@ class Organism(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'organism'
 
@@ -1661,7 +1666,7 @@ class OrganismCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'organism_category'
 
@@ -1672,7 +1677,7 @@ class OrganismIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Organism, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'organism_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -1685,7 +1690,7 @@ class OrganismPhonenumber(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'organism_phonenumber'
 
@@ -1714,7 +1719,7 @@ class OrganismVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'organism_version'
         unique_together = (('id', 'version'),)
@@ -1732,7 +1737,7 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'payment'
 
@@ -1743,7 +1748,7 @@ class PaymentMethod(models.Model):
     display = models.BooleanField(default=False)
     member_card_linked = models.BooleanField(default=False)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'payment_method'
 
@@ -1761,7 +1766,7 @@ class PaymentVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'payment_version'
         unique_together = (('id', 'version'),)
@@ -1773,7 +1778,7 @@ class Phonenumber(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'phonenumber'
 
@@ -1789,7 +1794,7 @@ class Picture(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'picture'
 
@@ -1806,7 +1811,7 @@ class PictureVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'picture_version'
         unique_together = (('id', 'version'),)
@@ -1816,7 +1821,7 @@ class Postalcode(models.Model):
     postalcode = models.CharField(max_length=7)
     city = models.CharField(max_length=255)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'postalcode'
 
@@ -1829,7 +1834,7 @@ class Price(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price'
 
@@ -1841,7 +1846,7 @@ class PriceGauge(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price_gauge'
         unique_together = (('gauge', 'price'),)
@@ -1854,7 +1859,7 @@ class PriceManifestation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price_manifestation'
         unique_together = (('manifestation', 'price'),)
@@ -1865,7 +1870,7 @@ class PricePOS(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price_p_o_s'
 
@@ -1877,7 +1882,7 @@ class PriceProduct(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price_product'
         unique_together = (('product', 'price'),)
@@ -1889,7 +1894,7 @@ class PriceTranslation(models.Model):
     description = models.CharField(max_length=255, blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'price_translation'
         unique_together = (('id', 'lang'),)
@@ -1914,7 +1919,7 @@ class Product(models.Model):
     version = models.BigIntegerField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product'
 
@@ -1927,7 +1932,7 @@ class ProductCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_category'
 
@@ -1938,7 +1943,7 @@ class ProductCategoryIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(ProductCategory, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_category_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -1949,7 +1954,7 @@ class ProductCategoryTranslation(models.Model):
     name = models.CharField(max_length=255)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_category_translation'
         unique_together = (('id', 'lang'),)
@@ -1969,7 +1974,7 @@ class ProductDeclination(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_declination'
 
@@ -1980,7 +1985,7 @@ class ProductDeclinationIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(ProductDeclination, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_declination_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -1993,7 +1998,7 @@ class ProductDeclinationTranslation(models.Model):
     description_for_buyers = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_declination_translation'
         unique_together = (('id', 'lang'),)
@@ -2018,7 +2023,7 @@ class ProductDeclinationVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_declination_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -2030,7 +2035,7 @@ class ProductIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Product, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -2042,7 +2047,7 @@ class ProductLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_link'
 
@@ -2053,7 +2058,7 @@ class ProductManifestationLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_manifestation_link'
 
@@ -2064,7 +2069,7 @@ class ProductMetaEventLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_meta_event_link'
 
@@ -2075,7 +2080,7 @@ class ProductPriceLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_price_link'
 
@@ -2086,7 +2091,7 @@ class ProductProductLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_product_link'
 
@@ -2098,7 +2103,7 @@ class ProductTranslation(models.Model):
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_translation'
         unique_together = (('id', 'lang'),)
@@ -2127,7 +2132,7 @@ class ProductVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -2139,7 +2144,7 @@ class ProductWorkspaceLink(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'product_workspace_link'
 
@@ -2158,7 +2163,7 @@ class Professional(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'professional'
 
@@ -2177,7 +2182,7 @@ class ProfessionalArchive(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'professional_archive'
 
@@ -2196,7 +2201,7 @@ class ProfessionalBase(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'professional_base'
 
@@ -2206,7 +2211,7 @@ class ProfessionalType(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'professional_type'
 
@@ -2222,7 +2227,7 @@ class RawAccounting(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'raw_accounting'
 
@@ -2239,7 +2244,7 @@ class RawAccountingVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'raw_accounting_version'
         unique_together = (('id', 'version'),)
@@ -2253,7 +2258,7 @@ class RemoteAuthentication(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'remote_authentication'
         unique_together = (('sf_guard_user', 'ipaddress'),)
@@ -2270,7 +2275,7 @@ class Seat(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'seat'
         unique_together = (('seated_plan', 'name'),)
@@ -2280,7 +2285,7 @@ class SeatLink(models.Model):
     seat1 = models.ForeignKey(Seat, db_column='seat1', related_name='seatlink_seat_1')
     seat2 = models.ForeignKey(Seat, db_column='seat2', related_name='seatlink_seat_2')
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'seat_link'
 
@@ -2297,7 +2302,7 @@ class SeatedPlan(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'seated_plan'
 
@@ -2315,7 +2320,7 @@ class SeatedPlanVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'seated_plan_version'
         unique_together = (('id', 'version'),)
@@ -2325,7 +2330,7 @@ class SeatedPlanWorkspace(models.Model):
     seated_plan = models.ForeignKey(SeatedPlan)
     workspace = models.ForeignKey('Workspace')
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'seated_plan_workspace'
 
@@ -2337,7 +2342,7 @@ class SfGuardForgotPassword(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_forgot_password'
 
@@ -2348,7 +2353,7 @@ class SfGuardGroup(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_group'
 
@@ -2359,7 +2364,7 @@ class SfGuardGroupPermission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_group_permission'
         unique_together = (('group', 'permission'),)
@@ -2371,7 +2376,7 @@ class SfGuardPermission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_permission'
 
@@ -2383,7 +2388,7 @@ class SfGuardRememberKey(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_remember_key'
 
@@ -2402,7 +2407,7 @@ class SfGuardUser(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_user'
 
@@ -2413,7 +2418,7 @@ class SfGuardUserGroup(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_user_group'
         unique_together = (('user', 'group'),)
@@ -2425,7 +2430,7 @@ class SfGuardUserPermission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'sf_guard_user_permission'
         unique_together = (('user', 'permission'),)
@@ -2435,7 +2440,7 @@ class SlavePing(models.Model):
     state = models.CharField(max_length=255)
     created_at = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'slave_ping'
 
@@ -2449,7 +2454,7 @@ class Survey(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey'
 
@@ -2465,7 +2470,7 @@ class SurveyAnswer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_answer'
 
@@ -2476,7 +2481,7 @@ class SurveyAnswerIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(SurveyAnswer, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_answer_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -2494,7 +2499,7 @@ class SurveyAnswerVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_answer_version'
         unique_together = (('id', 'version'),)
@@ -2511,7 +2516,7 @@ class SurveyAnswersGroup(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_answers_group'
 
@@ -2528,7 +2533,7 @@ class SurveyAnswersGroupVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_answers_group_version'
         unique_together = (('id', 'version'),)
@@ -2550,7 +2555,7 @@ class SurveyApplyTo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_apply_to'
 
@@ -2572,7 +2577,7 @@ class SurveyApplyToVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_apply_to_version'
         unique_together = (('id', 'version'),)
@@ -2584,7 +2589,7 @@ class SurveyIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Survey, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -2604,7 +2609,7 @@ class SurveyQuery(models.Model):
     version = models.BigIntegerField(blank=True, null=True)
     slug = models.CharField(unique=True, max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query'
 
@@ -2615,7 +2620,7 @@ class SurveyQueryIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(SurveyQuery, db_column='id', primary_key=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query_index'
         unique_together = (('keyword', 'field', 'position', 'id'),)
@@ -2625,7 +2630,7 @@ class SurveyQueryOption(models.Model):
     survey_query = models.ForeignKey(SurveyQuery)
     value = models.CharField(max_length=255)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query_option'
 
@@ -2635,7 +2640,7 @@ class SurveyQueryOptionTranslation(models.Model):
     name = models.CharField(max_length=255)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query_option_translation'
         unique_together = (('id', 'lang'),)
@@ -2646,7 +2651,7 @@ class SurveyQueryTranslation(models.Model):
     name = models.TextField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query_translation'
         unique_together = (('id', 'lang'),)
@@ -2668,7 +2673,7 @@ class SurveyQueryVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_query_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -2679,7 +2684,7 @@ class SurveyTranslation(models.Model):
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_translation'
         unique_together = (('id', 'lang'),)
@@ -2697,7 +2702,7 @@ class SurveyVersion(models.Model):
     version = models.BigIntegerField()
     lang = models.CharField(max_length=2)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'survey_version'
         unique_together = (('id', 'version', 'lang'),)
@@ -2714,7 +2719,7 @@ class Tax(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'tax'
 
@@ -2723,7 +2728,7 @@ class TaxManifestation(models.Model):
     tax_id = models.BigIntegerField()
     manifestation = models.ForeignKey(Manifestation)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'tax_manifestation'
 
@@ -2732,7 +2737,7 @@ class TaxPrice(models.Model):
     tax = models.ForeignKey(Tax)
     price_id = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'tax_price'
 
@@ -2741,7 +2746,7 @@ class TaxUser(models.Model):
     tax = models.ForeignKey(Tax)
     sf_guard_user_id = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'tax_user'
 
@@ -2758,7 +2763,7 @@ class TaxVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'tax_version'
         unique_together = (('id', 'version'),)
@@ -2791,7 +2796,7 @@ class Ticket(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'ticket'
         unique_together = (('seat', 'manifestation'),)
@@ -2825,7 +2830,7 @@ class TicketVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'ticket_version'
         unique_together = (('id', 'version'),)
@@ -2838,7 +2843,7 @@ class Traceable(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'traceable'
 
@@ -2851,7 +2856,7 @@ class TraceableVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'traceable_version'
         unique_together = (('id', 'version'),)
@@ -2873,7 +2878,7 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'transaction'
 
@@ -2895,7 +2900,7 @@ class TransactionVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'transaction_version'
 
@@ -2903,7 +2908,7 @@ class TransactionVersion(models.Model):
 class TypeOfResources(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'type_of_resources'
 
@@ -2912,7 +2917,7 @@ class UserPrice(models.Model):
     price = models.ForeignKey(Price)
     sf_guard_user = models.ForeignKey(SfGuardUser)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'user_price'
         unique_together = (('price', 'sf_guard_user'), ('sf_guard_user', 'price'),)
@@ -2926,7 +2931,7 @@ class Vat(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'vat'
 
@@ -2940,7 +2945,7 @@ class VatVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'vat_version'
         unique_together = (('id', 'version'),)
@@ -2959,7 +2964,7 @@ class WebOrigin(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField(blank=True, null=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'web_origin'
 
@@ -2968,7 +2973,7 @@ class WebOriginIp(models.Model):
     ipaddress = models.CharField(max_length=40)
     name = models.CharField(max_length=255)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'web_origin_ip'
 
@@ -2987,7 +2992,7 @@ class WebOriginVersion(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     version = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'web_origin_version'
         unique_together = (('id', 'version'),)
@@ -3000,7 +3005,7 @@ class Workspace(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'workspace'
 
@@ -3009,7 +3014,7 @@ class WorkspacePrice(models.Model):
     price = models.ForeignKey(Price)
     workspace = models.ForeignKey(Workspace)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'workspace_price'
         unique_together = (('price', 'workspace'), ('workspace', 'price'),)
@@ -3019,7 +3024,7 @@ class WorkspaceUser(models.Model):
     sf_guard_user = models.ForeignKey(SfGuardUser)
     workspace = models.ForeignKey(Workspace)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'workspace_user'
         unique_together = (('sf_guard_user', 'workspace'),)
@@ -3030,7 +3035,7 @@ class WorkspaceUserOrdering(models.Model):
     workspace = models.ForeignKey(Workspace)
     rank = models.BigIntegerField()
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'workspace_user_ordering'
         unique_together = (('sf_guard_user', 'workspace'),)
@@ -3045,7 +3050,7 @@ class YOB(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(MetaCore):
         managed = False
         db_table = 'y_o_b'
 

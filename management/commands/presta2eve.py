@@ -2,42 +2,16 @@
 # Copyright (C) 2015 Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 # Licence: MIT
 
-import logging, datetime
+import datetime
 from optparse import make_option
+
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 from presta.models import PsCustomer
+from eve.utils import Logger, AuditLogger
 from eve.views import Presta2Eve
-
-
-class Logger:
-
-    def __init__(self, file):
-        self.logger = logging.getLogger('myapp')
-        self.hdlr = logging.FileHandler(file)
-        self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        self.hdlr.setFormatter(self.formatter)
-        self.logger.addHandler(self.hdlr)
-        self.logger.setLevel(logging.INFO)
-
-
-class AuditLogger(object):
-
-    def __init__(self, path, start_time):
-        self.log = open(path + '.audit', 'w')
-        self.start_time = start_time
-
-    def write(self):
-        from auditlog.models import LogEntry
-        logs = LogEntry.objects.filter(timestamp__gte=self.start_time)
-        for log in logs:
-            self.log.write('\n' + log.timestamp.__str__())
-            self.log.write(' : ' + log.object_repr + ' ' + str(log.object_id) + ' : ')
-            self.log.write(log.changes_str.encode('utf8'))
-        self.log.close()
-
 
 
 class Command(BaseCommand):

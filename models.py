@@ -477,7 +477,7 @@ class ContactVersion(models.Model):
     slug = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    version = models.BigIntegerField()
+    version = models.BigIntegerField(blank=True, null=True)
 
     class Meta(MetaCore):
         managed = False

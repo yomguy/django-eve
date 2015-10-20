@@ -14,15 +14,17 @@ class Presta2Eve(object):
 
     default_lang = 'fr'
 
-    def __init__(self, customer, logger, dry_run=False):
+    def __init__(self, customer, logger=None, dry_run=False):
         self.customer = customer
         self.professional = None
         self.organism = None
         self.addresss = ''
-        self.logger = logger.logger
         self.dry_run = dry_run
         self.test_group_id = 40
         self.forum_group_id = 39
+        if not logger:
+            logger = Logger('/tmp/presta2eve.log')
+        self.logger = logger.logger
 
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)

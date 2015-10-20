@@ -364,6 +364,9 @@ class Contact(models.Model):
         managed = False
         db_table = 'contact'
 
+    def __unicode__(self):
+        return ' '.join([self.firstname, self.name])
+
 
 class ContactArchive(models.Model):
     contact = models.ForeignKey(Contact)

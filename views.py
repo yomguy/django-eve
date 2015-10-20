@@ -22,7 +22,9 @@ class Presta2Eve(object):
         self.logger = logger.logger
         self.dry_run = dry_run
         self.is_forum = True #TODO: detect forum
-
+        self.test_group_id = 40
+        self.forum_group_id = 39
+        
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
         names, domain = self.customer.email.split('@')

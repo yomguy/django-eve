@@ -21,10 +21,9 @@ class Presta2Eve(object):
         self.addresss = ''
         self.logger = logger.logger
         self.dry_run = dry_run
-        self.is_forum = True #TODO: detect forum
         self.test_group_id = 40
         self.forum_group_id = 39
-        
+
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
         names, domain = self.customer.email.split('@')
@@ -270,19 +269,22 @@ class Presta2Eve(object):
                 self.add_contact_to_group(id)
 
         def is_in_group(id):
-            for ps_group in ps_groups:
-                if ps_group.id_group == id:
-                    return True
-            return False
+            return id in ps_groups_ids
+
+        def is_forum():
+            return is_in_group(self.forum_group_id)
+
+        def is_test():
+            return is_in_group(self.test_group_id)
 
         add_excluding_group_11(393)
 
-        if self.is_forum:
+        if is_forum():
             self.add_contact_to_group(4)
         else:
             add_excluding_group_11(4)
 
-        if self.is_forum:
+        if is_forum():
             self.add_contact_to_group(5)
         else:
             add_excluding_group_11(5)
@@ -302,10 +304,10 @@ class Presta2Eve(object):
         if 25 in ps_groups_ids or 35 in ps_groups_ids:
             self.add_contact_to_group(459)
 
-        if self.is_forum and len(ps_groups) == 1 and 11 in ps_groups_ids:
+        if is_forum() and len(ps_groups) == 1 and 11 in ps_groups_ids:
             self.add_contact_to_group(46)
 
-        if not self.is_forum and 38 in ps_groups_ids:
+        if not is_forum() and 38 in ps_groups_ids:
             self.add_contact_to_group(460)
 
     def run(self):

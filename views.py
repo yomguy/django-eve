@@ -96,7 +96,10 @@ class Presta2Eve(object):
             keywords = re.split('\.|\@', self.contact.email)
             for keyword in keywords:
                 if keyword:
-                    index, c = ContactIndex.objects.get_or_create(id=self.contact, field='email', keyword=keyword, position=i)
+                    try:
+                        index, c = ContactIndex.objects.get_or_create(id=self.contact, field='email', keyword=keyword, position=i)
+                    except:
+                        pass
                     i += 1
 
             self.logger.info('index updated')

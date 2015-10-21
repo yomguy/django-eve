@@ -98,7 +98,7 @@ class Presta2Eve(object):
                 if keyword:
                     try:
                         index, c = ContactIndex.objects.get_or_create(id=self.contact, field='email', keyword=keyword, position=i)
-                    except
+                    except:
                         pass
                     i += 1
 

@@ -3059,11 +3059,8 @@ class YOB(models.Model):
 
 
 auditlog.register(Contact)
-auditlog.register(ContactVersion)
 auditlog.register(ContactIndex)
 auditlog.register(ContactPhonenumber)
 auditlog.register(YOB)
 auditlog.register(Organism)
 auditlog.register(Professional)
-auditlog.register(GroupContact)
-auditlog.register(GroupProfessional)

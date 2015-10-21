@@ -83,7 +83,11 @@ class Presta2Eve(object):
         if not self.dry_run:
             version.id = self.contact
             version.version = num
-            version.save()
+            try:
+                version.save()
+            except:
+                version.version = num + 1
+                version.save()
 
         self.logger.info('version added')
 

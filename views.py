@@ -33,6 +33,7 @@ class Presta2Eve(object):
         if contacts:
             self.contact = contacts[0]
             self.contact_created = False
+            self.set_version()
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):
@@ -327,7 +328,6 @@ class Presta2Eve(object):
             self.logger.info(self.customer.email)
             self.logger.info(self.customer.id_customer)
             self.set_contact()
-            self.set_version()
             self.set_index()
             self.set_lang()
             self.set_gender()

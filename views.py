@@ -98,7 +98,7 @@ class Presta2Eve(object):
                 if keyword:
                     try:
                         index, c = ContactIndex.objects.get_or_create(id=self.contact, field='email', keyword=keyword, position=i)
-                    except:
+                    except
                         pass
                     i += 1
 
@@ -234,11 +234,13 @@ class Presta2Eve(object):
 
     def add_contact_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        group_contact, c = GroupContact.objects.get_or_create(contact=self.contact, group=group)
+        group_contacts = GroupContact.objects.filter(contact=self.contact, group=group)
+        if not group_contacts:
+            group_contact = GroupContact(contact=self.contact, group=group)
+            group_contact.save()
+            self.logger.info('contact added to group : ' + group.name)
         if self.professional:
             self.add_professional_to_group(group_id)
-        if c:
-            self.logger.info('contact added to group : ' + group.name)
 
     def remove_contact_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
@@ -251,8 +253,10 @@ class Presta2Eve(object):
 
     def add_professional_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        group_professional, c = GroupProfessional.objects.get_or_create(professional=self.professional, group=group)
-        if c:
+        group_professionals = GroupProfessional.objects.filter(professional=self.professional, group=group)
+        if not group_professionals:
+            group_professional = GroupProfessional(professional=self.professional, group=group)
+            group_professional.save()
             self.logger.info('professional added to group : ' + group.name)
 
     def remove_professional_from_group(self, group_id):

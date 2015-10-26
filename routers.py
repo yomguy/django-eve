@@ -16,7 +16,7 @@ class EveRouter(object):
 
     def allow_relation(self, obj1, obj2, **hints):
         if obj1._meta.app_label == 'eve' or \
-           obj2._meta.app_label == 'eve:
+           obj2._meta.app_label == 'eve':
            return True
         return None
 

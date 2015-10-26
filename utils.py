@@ -28,6 +28,8 @@ class AuditLogger(object):
         logs = LogEntry.objects.filter(timestamp__gte=self.start_time)
         for log in logs:
             self.log.write('\n' + log.timestamp.__str__())
-            self.log.write(' : ' + log.object_repr + ' ' + str(log.object_id) + ' : ')
+            self.log.write(log.object_repr)
+            self.log.write('\n')
+            self.log.write(str(log.object_id) + ' : ')
             self.log.write(log.changes_str.encode('utf8'))
         self.log.close()

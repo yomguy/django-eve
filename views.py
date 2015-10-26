@@ -92,8 +92,8 @@ class Presta2Eve(object):
         if self.contact_created:
             index, c = ContactIndex.objects.get_or_create(id=self.contact, field='name', keyword=self.contact.name, position=0L)
             if self.contact.firstname:
-                index, c = ContactIndex.objects.get_or_create(id=self.contact, field='firstname', keyword=self.contact.firstname, position=0L)
-            i = 0
+                index, c = ContactIndex.objects.get_or_create(id=self.contact, field='firstname', keyword=self.contact.firstname, position=1L)
+            i = 2
             keywords = re.split('\.|\@', self.contact.email)
             for keyword in keywords:
                 if keyword:

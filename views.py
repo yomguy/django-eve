@@ -89,10 +89,7 @@ class Presta2Eve(object):
         self.logger.info('version added')
 
     def create_index(self, field, keyword, position=0L):
-        index = ContactIndex(id=self.contact, field=field, keyword=keyword, position=position)
-        print index.position, index.field, index.keyword
-        if not self.dry_run:
-            index.save()
+        index, c = ContactIndex.objects.get_or_create(id=self.contact, field=field, keyword=keyword, position=position)
 
     def set_index(self):
         if self.contact_created:

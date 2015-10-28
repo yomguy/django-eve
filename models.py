@@ -10,7 +10,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from auditlog.registry import auditlog
+# from auditlog.registry import auditlog
 
 
 class MetaCore:
@@ -406,7 +406,7 @@ class ContactIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey('Contact', db_column='id', primary_key=True)
+    id = models.ForeignKey(Contact, db_column='id', primary_key=True, related_name='indexes')
 
     class Meta(MetaCore):
         managed = False
@@ -3057,10 +3057,10 @@ class YOB(models.Model):
         managed = False
         db_table = 'y_o_b'
 
-
-auditlog.register(Contact)
-auditlog.register(ContactIndex)
-auditlog.register(ContactPhonenumber)
-auditlog.register(YOB)
-auditlog.register(Organism)
-auditlog.register(Professional)
+#
+# auditlog.register(Contact)
+# auditlog.register(ContactIndex)
+# auditlog.register(ContactPhonenumber)
+# auditlog.register(YOB)
+# auditlog.register(Organism)
+# auditlog.register(Professional)

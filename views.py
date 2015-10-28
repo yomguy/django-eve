@@ -88,21 +88,23 @@ class Presta2Eve(object):
 
         self.logger.info('version added')
 
+    def create_index(self, field, keyword, position=0L):
+        index = ContactIndex(id=self.contact, field=field, keyword=keyword, position=position)
+        print index.position, index.field, index.keyword
+        if not self.dry_run:
+            index.save()
+
     def set_index(self):
         if self.contact_created:
-            index, c = ContactIndex.objects.get_or_create(id=self.contact, field='name', keyword=self.contact.name, position=0L)
+            self.create_index(field='name', keyword=self.contact.name)
             if self.contact.firstname:
-                index, c = ContactIndex.objects.get_or_create(id=self.contact, field='firstname', keyword=self.contact.firstname, position=1L)
-            i = 2
+                self.create_index(field='firstname', keyword=self.contact.firstname)
             keywords = re.split('\.|\@', self.contact.email)
+            position = 0L
             for keyword in keywords:
                 if keyword:
-                    try:
-                        index, c = ContactIndex.objects.get_or_create(id=self.contact, field='email', keyword=keyword, position=i)
-                    except:
-                        pass
-                    i += 1
-
+                    self.create_index(field='email', keyword=keyword, position=position)
+                    position += 1L
             self.logger.info('index updated')
 
     def set_lang(self):

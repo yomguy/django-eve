@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 from presta.models import PsCustomer
-from eve.utils import Logger, AuditLogger
+from eve.utils import Logger
 from eve.views import Presta2Eve
 
 
@@ -49,5 +49,9 @@ class Command(BaseCommand):
                 break
             i+= 1
 
-        audit_logger = AuditLogger(log_file + '.audit', start_time)
-        audit_logger.write()
+        try:
+            from eve.utils import AuditLogger
+            audit_logger = AuditLogger(log_file + '.audit', start_time)
+            audit_logger.write()
+        except:
+            pass

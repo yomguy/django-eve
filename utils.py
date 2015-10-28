@@ -4,8 +4,6 @@
 
 
 import logging
-from auditlog.models import LogEntry
-
 
 class Logger:
 
@@ -21,6 +19,7 @@ class Logger:
 class AuditLogger(object):
 
     def __init__(self, path, start_time):
+        from auditlog.models import LogEntry
         self.log = open(path + '.audit', 'w')
         self.start_time = start_time
 

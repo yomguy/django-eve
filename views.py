@@ -266,6 +266,17 @@ class Presta2Eve(object):
         ps_groups = PsCustomerGroup.objects.filter(id_customer=self.customer.id_customer)
         ps_groups_ids = [ps_group.id_group for ps_group in ps_groups]
 
+        # cleanup Test and Forum group
+        self.is_forum = False
+        if self.forum_group_id in ps_groups_ids:
+            self.is_forum = True
+            ps_groups_ids.remove(self.forum_group_id)
+
+        self.is_test = False
+        if self.test_group_id in ps_groups_ids:
+            self.is_test = True
+            ps_groups_ids.remove(self.test_group_id)
+
         def add_excluding_group_11(id):
             if len(ps_groups) == 1:
                 if not ps_groups[0].id_group == 11:
@@ -273,23 +284,14 @@ class Presta2Eve(object):
             else:
                 self.add_contact_to_group(id)
 
-        def is_in_group(id):
-            return id in ps_groups_ids
-
-        def is_forum():
-            return is_in_group(self.forum_group_id)
-
-        def is_test():
-            return is_in_group(self.test_group_id)
-
         add_excluding_group_11(393)
 
-        if is_forum():
+        if self.is_forum:
             self.add_contact_to_group(4)
         else:
             add_excluding_group_11(4)
 
-        if is_forum():
+        if self.is_forum:
             self.add_contact_to_group(5)
         else:
             add_excluding_group_11(5)
@@ -309,10 +311,10 @@ class Presta2Eve(object):
         if 25 in ps_groups_ids or 35 in ps_groups_ids:
             self.add_contact_to_group(459)
 
-        if is_forum() and len(ps_groups) == 1 and 11 in ps_groups_ids:
+        if self.is_forum and len(ps_groups) == 1 and 11 in ps_groups_ids:
             self.add_contact_to_group(46)
 
-        if not is_forum() and 38 in ps_groups_ids:
+        if not self.is_forum and 38 in ps_groups_ids:
             self.add_contact_to_group(460)
 
     def run(self):

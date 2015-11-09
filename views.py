@@ -55,15 +55,18 @@ class Presta2Eve(object):
                 self.contact_created = True
 
     def set_contact(self):
-        if self.customer.lastname:
-            self.contact.name = self.contact.name or self.customer.lastname.capitalize()
+        if self.contact.description:
+            self.contact.description = self.contact.description + '\n' + 'PRESTA ' + str(self.customer.id_customer)
+        else:
             self.contact.description = 'PRESTA ' + str(self.customer.id_customer)
+        if self.customer.lastname:
+            self.contact.name = self.contact.name or self.customer.lastname.upper()
         else:
             self.contact.name = 'PRESTA ' + str(self.customer.id_customer)
         self.contact.firstname = self.contact.firstname or self.customer.firstname.capitalize()
-        self.contact.confirmed = True
 
         if not self.dry_run:
+            self.contact.confirmed = True
             self.contact.save()
 
         if self.contact_created:
@@ -146,11 +149,11 @@ class Presta2Eve(object):
 
             self.contact.address = self.address
             self.contact.postalcode = self.ps_address.postcode
-            self.contact.city = self.ps_address.city
+            self.contact.city = self.ps_address.city.upper()
 
             if self.ps_address.id_country:
                 self.country = PsCountryLang.objects.get(id_country=self.ps_address.id_country, id_lang=self.ps_lang.id_lang).name
-                self.contact.country = self.country
+                self.contact.country = self.country.upper()
             else:
                 self.contact.country = None
 
@@ -278,8 +281,8 @@ class Presta2Eve(object):
             ps_groups_ids.remove(self.test_group_id)
 
         def add_excluding_group_11(id):
-            if len(ps_groups) == 1:
-                if not ps_groups[0].id_group == 11:
+            if len(ps_groups_ids) == 1:
+                if not 11 in ps_groups_ids:
                     self.add_contact_to_group(id)
             else:
                 self.add_contact_to_group(id)
@@ -311,7 +314,7 @@ class Presta2Eve(object):
         if 25 in ps_groups_ids or 35 in ps_groups_ids:
             self.add_contact_to_group(459)
 
-        if self.is_forum and len(ps_groups) == 1 and 11 in ps_groups_ids:
+        if self.is_forum and len(ps_groups_ids) == 1 and 11 in ps_groups_ids:
             self.add_contact_to_group(46)
 
         if not self.is_forum and 38 in ps_groups_ids:
@@ -335,3 +338,5 @@ class Presta2Eve(object):
             self.set_organism()
             self.set_professional()
             self.set_groups()
+        else:
+            print self.contact.name, self.contact.updated_at, self.customer.date_upd

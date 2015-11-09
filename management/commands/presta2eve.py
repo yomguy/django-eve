@@ -18,6 +18,18 @@ class Command(BaseCommand):
 
     help = "Copy/Update contacts from a PrestaShop DB into a E-venement DB"
 
+    test_customers = ['julie.pak@gmail.com',
+                        'remi.test@gmail.com',
+                        'marie.testa@hotmail.fr',
+                        'bernard.testabel@ircam.fr',
+                        'jean.testarin@testeasy.com',
+                        'marie.lunette@testoptique.com',
+                        'pierre.foot@testobut.com',
+                        'atorrino@tasty.com',
+                        'axel.rose@gunsnroses.com',
+                        'paul.stanley@kiss.com',
+                        'd.grohl@foofighters.com']
+
     option_list = BaseCommand.option_list + (
           make_option('-d', '--dry-run',
             action='store_true',
@@ -26,28 +38,29 @@ class Command(BaseCommand):
           make_option('-l', '--log',
             dest='log',
             help='define log file'),
-          make_option('-n', '--number',
-            dest='number',
-            help='set maximum number of loops'),
+          make_option('-t', '--test',
+            action='store_true',
+            dest='test',
+            help='only process test customers'),
           )
 
     def handle(self, *args, **kwargs):
         start_time = datetime.datetime.now()
         log_file = kwargs.get('log')
         dry_run =  kwargs.get('dry_run')
-        n = kwargs.get('number')
+        test =  kwargs.get('test')
         logger = Logger(log_file)
-        if n:
-            n = int(n)
 
-        i = 0
-        customers = PsCustomer.objects.all()
+        if test:
+            customers = []
+            for email in self.test_customers:
+                customers.append(PsCustomer.objects.get(email=email))
+        else:
+            customers = PsCustomer.objects.all()
+
         for customer in customers:
             p2e = Presta2Eve(customer, logger, dry_run)
             p2e.run()
-            if n and i >= n:
-                break
-            i+= 1
 
         try:
             from eve.utils import AuditLogger

@@ -31,10 +31,6 @@ class Command(BaseCommand):
                         'd.grohl@foofighters.com']
 
     option_list = BaseCommand.option_list + (
-          make_option('-d', '--dry-run',
-            action='store_true',
-            dest='dry_run',
-            help='Do NOT write anything'),
           make_option('-l', '--log',
             dest='log',
             help='define log file'),
@@ -47,7 +43,6 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         start_time = datetime.datetime.now()
         log_file = kwargs.get('log')
-        dry_run =  kwargs.get('dry_run')
         test =  kwargs.get('test')
         logger = Logger(log_file)
 
@@ -59,7 +54,7 @@ class Command(BaseCommand):
             customers = PsCustomer.objects.all()
 
         for customer in customers:
-            p2e = Presta2Eve(customer, logger, dry_run)
+            p2e = Presta2Eve(customer, logger)
             p2e.run()
 
         try:

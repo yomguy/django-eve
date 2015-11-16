@@ -14,12 +14,11 @@ class Presta2Eve(object):
 
     default_lang = 'fr'
 
-    def __init__(self, customer, logger=None, dry_run=False):
+    def __init__(self, customer, logger=None):
         self.customer = customer
         self.professional = None
         self.organism = None
         self.addresss = ''
-        self.dry_run = dry_run
         self.test_group_id = 40
         self.forum_group_id = 39
         if not logger:
@@ -64,11 +63,8 @@ class Presta2Eve(object):
         else:
             self.contact.name = 'PRESTA ' + str(self.customer.id_customer)
         self.contact.firstname = self.contact.firstname or self.customer.firstname.capitalize()
-
-        if not self.dry_run:
-            self.contact.confirmed = True
-            self.contact.save()
-
+        self.contact.confirmed = True
+        self.contact.save()
         if self.contact_created:
             self.logger.info('contact created : ' + str(self.contact.id))
         else:
@@ -84,11 +80,9 @@ class Presta2Eve(object):
         for field in self.contact._meta.fields:
             if not field.name == 'id':
                 setattr(version, field.name, getattr(self.contact, field.name))
-        if not self.dry_run:
-            version.id = self.contact
-            version.version = num
-            version.save()
-
+        version.id = self.contact
+        version.version = num
+        version.save()
         self.logger.info('version added')
 
     def create_index(self, field, keyword, position=0L):
@@ -113,10 +107,7 @@ class Presta2Eve(object):
         else:
             self.ps_lang = PsLang.objects.get(iso_code=self.default_lang)
         self.contact.culture = self.ps_lang.name
-
-        if not self.dry_run:
-            self.contact.save()
-
+        self.contact.save()
         self.logger.info('culture updated')
 
     def set_gender(self):
@@ -128,10 +119,7 @@ class Presta2Eve(object):
             self.contact.title = 'Madame'
         elif self.customer.id_gender == 1 and self.ps_lang.iso_code == 'en':
             self.contact.title = 'Mrs.'
-
-        if not self.dry_run:
-            self.contact.save()
-
+        self.contact.save()
         self.logger.info('genre updated')
 
     def set_address(self):
@@ -144,7 +132,6 @@ class Presta2Eve(object):
             self.address = self.ps_address.address1 + '\n' + self.ps_address.address2
 
             if len(self.ps_addresses) > 1:
-                #TODO: get livraison ?
                 self.logger.info('more than 1 address')
 
             self.contact.address = self.address
@@ -157,9 +144,7 @@ class Presta2Eve(object):
             else:
                 self.contact.country = None
 
-            if not self.dry_run:
-                self.contact.save()
-
+            self.contact.save()
             self.logger.info('address updated')
 
     def set_phonenumber(self):
@@ -170,7 +155,7 @@ class Presta2Eve(object):
                 number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name='Fixe')
                 self.logger.info('phone updated')
-                
+
             if self.ps_address.phone_mobile:
                 number = self.ps_address.phone_mobile.replace(' ', '')
                 number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
@@ -187,10 +172,7 @@ class Presta2Eve(object):
             yob.year = self.customer.birthday.year
             yob.month = self.customer.birthday.month
             yob.day = self.customer.birthday.day
-
-            if not self.dry_run:
-                yob.save()
-
+            yob.save()
             self.logger.info('birthday updated')
 
     def set_organism(self):
@@ -213,9 +195,7 @@ class Presta2Eve(object):
                 self.organism.city = self.organism.city or self.contact.city
                 self.organism.country = self.organism.country or self.contact.country
 
-            if not self.dry_run:
-                self.organism.save()
-
+            self.organism.save()
             self.logger.info('organism updated')
 
     def set_professional(self):
@@ -225,11 +205,7 @@ class Presta2Eve(object):
                 self.professional = Professional(organism=self.organism, contact=self.contact)
                 self.professional.contact_email = self.contact.email
                 self.professional.name = self.professional.name or self.contact.name
-                #TODO: phone, etc..
-
-                if not self.dry_run:
-                    self.professional.save()
-
+                self.professional.save()
                 self.logger.info('professional updated')
 
     def add_contact_to_group(self, group_id):

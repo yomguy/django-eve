@@ -312,4 +312,4 @@ class Presta2Eve(object):
             self.set_professional()
             self.set_groups()
         else:
-            print self.contact.name, self.contact.updated_at, self.customer.date_upd
+            print self.contact.email, self.contact.updated_at, self.customer.date_upd

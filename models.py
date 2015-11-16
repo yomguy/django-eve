@@ -2155,7 +2155,7 @@ class ProductWorkspaceLink(models.Model):
 class Professional(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     organism = models.ForeignKey(Organism, related_name='professional_organism')
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact, related_name='professionals')
     professional_type = models.ForeignKey('ProfessionalType', blank=True, null=True)
     contact_number = models.CharField(max_length=255, blank=True, null=True)
     contact_email = models.CharField(max_length=255, blank=True, null=True)

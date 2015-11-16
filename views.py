@@ -163,25 +163,19 @@ class Presta2Eve(object):
             self.logger.info('address updated')
 
     def set_phonenumber(self):
+        n = 2
         if self.ps_address:
-            phone_numbers = ContactPhonenumber.objects.filter(contact=self.contact)
-            if phone_numbers:
-                if len(phone_numbers) > 1:
-                    self.logger.info('has more than 1 phone number')
-                phone_number = phone_numbers[0]
-            else:
-                phone_number = ContactPhonenumber(contact=self.contact)
-            #TODO: type
-
-            number = self.ps_address.phone_mobile.replace(' ', '')
-            n = 2
-            number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
-            if phone_number.number != number:
-                phone_number.number = number
-                if not self.dry_run:
-                    phone_number.save()
-
+            if self.ps_address.phone:
+                number = self.ps_address.phone.replace(' ', '')
+                number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
+                phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name='Fixe')
                 self.logger.info('phone updated')
+                
+            if self.ps_address.phone_mobile:
+                number = self.ps_address.phone_mobile.replace(' ', '')
+                number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
+                phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=self.ps_address.phone_mobile, name='Mobile')
+                self.logger.info('mobile phone updated')
 
     def set_birthday(self):
         if self.customer.birthday:
@@ -202,8 +196,11 @@ class Presta2Eve(object):
     def set_organism(self):
         custom_field = PsCustomField.objects.get(id_custom_field=2)
         ps_organisms = PsCustomerCustomFieldValue.objects.filter(id_customer=self.customer, id_custom_field=custom_field)
+        for org in ps_organisms:
+            print org.value
         if ps_organisms:
             ps_organism = ps_organisms[0]
+            print ps_organism.value
             organisms = Organism.objects.filter(name=ps_organism.value)
             if not organisms:
                 self.organism = Organism(name=ps_organism.value)

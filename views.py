@@ -21,9 +21,29 @@ class Presta2Eve(object):
         self.addresss = ''
         self.test_group_id = 40
         self.forum_group_id = 39
+        self.default_group_id = 11
+        self.is_elligible = True
         if not logger:
             logger = Logger('/tmp/presta2eve.log')
         self.logger = logger.logger
+
+    def get_groups(self):
+        self.ps_groups = PsCustomerGroup.objects.filter(id_customer=self.customer.id_customer)
+        self.ps_groups_ids = [ps_group.id_group for ps_group in self.ps_groups]
+
+        # cleanup Test and Forum group
+        self.is_forum = False
+        if self.forum_group_id in self.ps_groups_ids:
+            self.is_forum = True
+            self.ps_groups_ids.remove(self.forum_group_id)
+
+        self.is_test = False
+        if self.test_group_id in self.ps_groups_ids:
+            self.is_test = True
+            self.ps_groups_ids.remove(self.test_group_id)
+
+        if len(self.ps_groups_ids) == 1 and self.default_group_id in self.ps_groups_ids:
+            self.is_elligible = False
 
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
@@ -239,63 +259,35 @@ class Presta2Eve(object):
             self.logger.info('professional group deleted : ' + group.name)
 
     def set_groups(self):
-        ps_groups = PsCustomerGroup.objects.filter(id_customer=self.customer.id_customer)
-        ps_groups_ids = [ps_group.id_group for ps_group in ps_groups]
-
-        # cleanup Test and Forum group
-        self.is_forum = False
-        if self.forum_group_id in ps_groups_ids:
-            self.is_forum = True
-            ps_groups_ids.remove(self.forum_group_id)
-
-        self.is_test = False
-        if self.test_group_id in ps_groups_ids:
-            self.is_test = True
-            ps_groups_ids.remove(self.test_group_id)
-
-        def add_excluding_group_11(id):
-            if len(ps_groups_ids) == 1:
-                if not 11 in ps_groups_ids:
-                    self.add_contact_to_group(id)
-            else:
-                self.add_contact_to_group(id)
-
-        add_excluding_group_11(393)
-
-        if self.is_forum:
-            self.add_contact_to_group(4)
-        else:
-            add_excluding_group_11(4)
-
-        if self.is_forum:
-            self.add_contact_to_group(5)
-        else:
-            add_excluding_group_11(5)
+        self.add_contact_to_group(393)
+        self.add_contact_to_group(4)
+        self.add_contact_to_group(5)
 
         if self.professional:
-            add_excluding_group_11(390)
+            self.add_contact_to_group(390)
 
-        if 13 in ps_groups_ids or 14 in ps_groups_ids or 15 in ps_groups_ids:
+        if 13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids:
             self.add_contact_to_group(457)
 
         group = GroupTable.objects.get(id=457)
         groups = GroupContact.objects.filter(contact=self.contact, group=group)
-        if not (13 in ps_groups_ids or 14 in ps_groups_ids or 15 in ps_groups_ids) and groups:
+        if not (13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids) and groups:
             self.remove_contact_from_group(457)
             self.add_contact_to_group(458)
 
-        if 25 in ps_groups_ids or 35 in ps_groups_ids:
+        if 25 in self.ps_groups_ids or 35 in self.ps_groups_ids:
             self.add_contact_to_group(459)
 
-        if self.is_forum and len(ps_groups_ids) == 1 and 11 in ps_groups_ids:
+        if self.is_forum and len(self.ps_groups_ids) == 1 and 11 in self.ps_groups_ids:
             self.add_contact_to_group(46)
 
-        if not self.is_forum and 38 in ps_groups_ids:
+        if not self.is_forum and 38 in self.ps_groups_ids:
             self.add_contact_to_group(460)
 
     def run(self):
+        self.get_groups()
         self.get_contact()
-        if self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd):
+        if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible:
             self.logger.info('*********************************************************')
             self.logger.info(self.customer.lastname)
             self.logger.info(self.customer.email)

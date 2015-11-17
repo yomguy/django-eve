@@ -200,7 +200,7 @@ class Presta2Eve(object):
         ps_organisms = PsCustomerCustomFieldValue.objects.filter(id_customer=self.customer, id_custom_field=custom_field)
         if ps_organisms:
             ps_organism = ps_organisms[0]
-            if ps_organism:
+            if ps_organism.value:
                 organisms = Organism.objects.filter(name=ps_organism.value)
                 if not organisms:
                     self.organism = Organism(name=ps_organism.value)

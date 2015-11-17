@@ -130,7 +130,7 @@ class Presta2Eve(object):
             self.ps_lang = PsLang.objects.get(id_lang=self.customer.id_lang)
         else:
             self.ps_lang = PsLang.objects.get(iso_code=self.default_lang)
-        self.contact.culture = self.ps_lang.name
+        self.contact.culture = self.contact.culture or self.ps_lang.name
         self.contact.save()
         self.logger.info('culture updated')
 
@@ -158,13 +158,13 @@ class Presta2Eve(object):
             if len(self.ps_addresses) > 1:
                 self.logger.info('more than 1 address')
 
-            self.contact.address = self.address
-            self.contact.postalcode = self.ps_address.postcode
-            self.contact.city = self.ps_address.city.upper()
+            self.contact.address = self.contact.address or self.address
+            self.contact.postalcode = self.contact.postalcode or self.ps_address.postcode
+            self.contact.city = self.contact.city or self.ps_address.city.upper()
 
             if self.ps_address.id_country:
                 self.country = PsCountryLang.objects.get(id_country=self.ps_address.id_country, id_lang=self.ps_lang.id_lang).name
-                self.contact.country = self.country.upper()
+                self.contact.country = self.contact.country or self.country.upper()
             else:
                 self.contact.country = None
 
@@ -180,9 +180,9 @@ class Presta2Eve(object):
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name='Fixe')
                 self.logger.info('phone updated')
 
-            if self.ps_address.phone_mobile:
                 number = self.ps_address.phone_mobile.replace(' ', '')
                 number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
+            if self.ps_address.phone_mobile:
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=self.ps_address.phone_mobile, name='Mobile')
                 self.logger.info('mobile phone updated')
 
@@ -225,7 +225,7 @@ class Presta2Eve(object):
             professionals = Professional.objects.filter(organism=self.organism, contact=self.contact)
             if not professionals:
                 self.professional = Professional(organism=self.organism, contact=self.contact)
-                self.professional.contact_email = self.contact.email
+                self.professional.contact_email = self.professional.contact_email or self.contact.email
                 self.professional.name = self.professional.name or self.contact.name
                 self.professional.save()
                 self.logger.info('professional updated')

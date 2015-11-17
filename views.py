@@ -200,21 +200,21 @@ class Presta2Eve(object):
         ps_organisms = PsCustomerCustomFieldValue.objects.filter(id_customer=self.customer, id_custom_field=custom_field)
         if ps_organisms:
             ps_organism = ps_organisms[0]
-            print ps_organism.value
-            organisms = Organism.objects.filter(name=ps_organism.value)
-            if not organisms:
-                self.organism = Organism(name=ps_organism.value)
-            else:
-                self.organism = organisms[0]
+            if ps_organism:
+                organisms = Organism.objects.filter(name=ps_organism.value)
+                if not organisms:
+                    self.organism = Organism(name=ps_organism.value)
+                else:
+                    self.organism = organisms[0]
 
-            if self.ps_addresses:
-                self.organism.address = self.organism.address or self.contact.address
-                self.organism.postalcode = self.organism.postalcode or self.contact.postalcode
-                self.organism.city = self.organism.city or self.contact.city
-                self.organism.country = self.organism.country or self.contact.country
+                if self.ps_addresses:
+                    self.organism.address = self.organism.address or self.contact.address
+                    self.organism.postalcode = self.organism.postalcode or self.contact.postalcode
+                    self.organism.city = self.organism.city or self.contact.city
+                    self.organism.country = self.organism.country or self.contact.country
 
-            self.organism.save()
-            self.logger.info('organism updated')
+                self.organism.save()
+                self.logger.info('organism updated')
 
     def set_professional(self):
         if self.organism:

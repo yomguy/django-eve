@@ -38,12 +38,17 @@ class Command(BaseCommand):
             action='store_true',
             dest='test',
             help='only process test customers'),
+          make_option('-u', '--update',
+            action='store_true',
+            dest='update',
+            help='update customer dates'),
           )
 
     def handle(self, *args, **kwargs):
         start_time = datetime.datetime.now()
         log_file = kwargs.get('log')
         test =  kwargs.get('test')
+        update =  kwargs.get('update')
         logger = Logger(log_file)
 
         if test:
@@ -54,6 +59,9 @@ class Command(BaseCommand):
             customers = PsCustomer.objects.all()
 
         for customer in customers:
+            if update:
+                customer.date_upd = datetime.datetime.now()
+                customer.save()
             p2e = Presta2Eve(customer, logger)
             p2e.run()
 

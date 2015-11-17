@@ -47,12 +47,16 @@ class Presta2Eve(object):
 
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
+        professionals = Professional.objects.filter(contact_email=self.customer.email)
         names, domain = self.customer.email.split('@')
 
         if contacts:
             self.contact = contacts[0]
             self.contact_created = False
             # self.set_version()
+        elif professionals:
+            self.contact = professionals[0].contact
+            self.contact_created = False
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):

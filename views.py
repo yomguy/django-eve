@@ -198,8 +198,6 @@ class Presta2Eve(object):
     def set_organism(self):
         custom_field = PsCustomField.objects.get(id_custom_field=2)
         ps_organisms = PsCustomerCustomFieldValue.objects.filter(id_customer=self.customer, id_custom_field=custom_field)
-        for org in ps_organisms:
-            print org.value
         if ps_organisms:
             ps_organism = ps_organisms[0]
             print ps_organism.value

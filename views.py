@@ -48,6 +48,7 @@ class Presta2Eve(object):
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
         professionals = Professional.objects.filter(contact_email=self.customer.email)
+        organisms = Organism.objects.filter(email=self.customer.email)
         names, domain = self.customer.email.split('@')
 
         if contacts:
@@ -55,8 +56,20 @@ class Presta2Eve(object):
             self.contact_created = False
             # self.set_version()
         elif professionals:
-            self.contact = professionals[0].contact
+            if organisms:
+                self.organism = organisms[0]
+                self.professional = self.organisms.professional
+                self.contact = self.professional.contact
+                if self.professional.contact_email:
+                    self.contact.email = self.professional.contact_email
+                else:
+                    self.contact.email = self.organism.email
+            else:
+                self.professional = professionals[0]
+                self.contact = self.professional.contact
+                self.contact.email = self.professional.contact_email
             self.contact_created = False
+            self.contact.save()
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):
@@ -158,13 +171,16 @@ class Presta2Eve(object):
             if len(self.ps_addresses) > 1:
                 self.logger.info('more than 1 address')
 
-            self.contact.address = self.contact.address or self.address
-            self.contact.postalcode = self.contact.postalcode or self.ps_address.postcode
-            self.contact.city = self.contact.city or self.ps_address.city.upper()
+            if self.address:
+                self.contact.address = self.address
+                self.contact.city = self.ps_address.city.upper()
+            if self.ps_address.postcode:
+                self.contact.postalcode = self.ps_address.postcode
 
             if self.ps_address.id_country:
                 self.country = PsCountryLang.objects.get(id_country=self.ps_address.id_country, id_lang=self.ps_lang.id_lang).name
-                self.contact.country = self.contact.country or self.country.upper()
+                if self.country:
+                    self.contact.country = self.country.upper()
             else:
                 self.contact.country = None
 
@@ -190,7 +206,8 @@ class Presta2Eve(object):
         if self.customer.birthday:
             yobs = YOB.objects.filter(contact=self.contact)
             if yobs:
-                yob = yob[0]
+                yob = yobs[0]
+                self.logger.info('birthday selected')
             else:
                 yob = YOB(contact=self.contact)
             yob.year = self.customer.birthday.year
@@ -207,18 +224,25 @@ class Presta2Eve(object):
             if ps_organism.value:
                 organisms = Organism.objects.filter(name=ps_organism.value)
                 if not organisms:
-                    self.organism = Organism(name=ps_organism.value)
+                    organisms = Organism.objects.filter(name__contains=ps_organism.value)
+                    if organisms:
+                        if len(organisms) == 1:
+                            self.organism = organisms[0]
+                            self.logger.info('organism selected')
+                        else:
+                            self.logger.info('organism NOT SELECTED')
+                    else:
+                        self.organism = Organism(name=ps_organism.value)
+                        if self.ps_addresses:
+                            self.organism.address = self.contact.address
+                            self.organism.postalcode = self.contact.postalcode
+                            self.organism.city = self.contact.city
+                            self.organism.country = self.contact.country
+                            self.organism.save()
+                            self.logger.info('organism created')
                 else:
                     self.organism = organisms[0]
-
-                if self.ps_addresses:
-                    self.organism.address = self.organism.address or self.contact.address
-                    self.organism.postalcode = self.organism.postalcode or self.contact.postalcode
-                    self.organism.city = self.organism.city or self.contact.city
-                    self.organism.country = self.organism.country or self.contact.country
-
-                self.organism.save()
-                self.logger.info('organism updated')
+                    self.logger.info('organism selected')
 
     def set_professional(self):
         if self.organism:
@@ -226,9 +250,11 @@ class Presta2Eve(object):
             if not professionals:
                 self.professional = Professional(organism=self.organism, contact=self.contact)
                 self.professional.contact_email = self.professional.contact_email or self.contact.email
-                self.professional.name = self.professional.name or self.contact.name
                 self.professional.save()
-                self.logger.info('professional updated')
+                self.logger.info('professional created')
+            else:
+                self.professional = professionals[0]
+                self.logger.info('professional selected')
 
     def add_contact_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
@@ -265,7 +291,7 @@ class Presta2Eve(object):
         self.add_contact_to_group(4)
         self.add_contact_to_group(5)
 
-        if self.professional:
+        if self.professional or self.organism:
             self.add_contact_to_group(390)
 
         if 13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids:

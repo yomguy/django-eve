@@ -61,6 +61,7 @@ class Presta2Eve(object):
             orgs = self.professional.organism_professional.all()
             if orgs:
                 self.organism = orgs[0]
+            # TODO remplace-t-on les emails ?
             if self.professional.contact_email:
                 self.contact.email = self.professional.contact_email
             elif self.organism:
@@ -74,9 +75,13 @@ class Presta2Eve(object):
                 if self.professional.contact_email:
                     self.contact.email = self.professional.contact_email
             elif self.organism:
-                if self.organism.email:
-                    self.contact = Contact(email=self.organism.email)
-                    self.contact_created = True
+                professionals = self.organism.professionals.all()
+                if professionals:
+                    self.professional = professionals[0]
+                    self.contact = self.professional.contact
+                    # TODO idem email ?
+                    self.professional.contact_email = self.organism.email
+                    self.contact.email = self.organism.email
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):

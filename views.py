@@ -75,7 +75,8 @@ class Presta2Eve(object):
                     self.contact.email = self.professional.contact_email
             elif self.organism:
                 if self.organism.email:
-                    self.contact.email = self.organism.email
+                    self.contact = Contact(email=self.organism.email)
+                    self.contact_created = True
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):

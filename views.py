@@ -50,25 +50,27 @@ class Presta2Eve(object):
         professionals = Professional.objects.filter(contact_email=self.customer.email)
         organisms = Organism.objects.filter(email=self.customer.email)
         names, domain = self.customer.email.split('@')
+        self.contact_created = False
 
         if contacts:
             self.contact = contacts[0]
-            self.contact_created = False
             # self.set_version()
         elif professionals:
-            if organisms:
-                self.organism = organisms[0]
-                self.professional = self.organisms.professional
-                self.contact = self.professional.contact
-                if self.professional.contact_email:
-                    self.contact.email = self.professional.contact_email
-                else:
-                    self.contact.email = self.organism.email
-            else:
-                self.professional = professionals[0]
-                self.contact = self.professional.contact
+            self.professional = professionals[0]
+            self.contact = self.professional.contact
+            self.organism = self.professional.organism_professional.all()[0]
+            if self.professional.contact_email:
                 self.contact.email = self.professional.contact_email
-            self.contact_created = False
+            elif self.organism.email:
+                self.contact.email = self.organism.email
+        elif organisms:
+            self.organism = organisms[0]
+            self.professional = self.organism.professional
+            self.contact = self.professional.contact
+            if self.professional.contact_email:
+                self.contact.email = self.professional.contact_email
+            elif self.organism.email:
+                self.contact.email = self.organism.email
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):
@@ -83,7 +85,6 @@ class Presta2Eve(object):
                 contacts = Contact.objects.filter(email=email)
                 if contacts:
                     self.contact = contacts[0]
-                    self.contact_created = False
                     break
             if not contacts:
                 self.contact = Contact(email=self.customer.email)

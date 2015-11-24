@@ -64,7 +64,7 @@ class Command(BaseCommand):
                 customer.save()
             p2e = Presta2Eve(customer, logger)
             p2e.run()
-
+            
         try:
             from eve.utils import AuditLogger
             audit_logger = AuditLogger(log_file + '.audit', start_time)

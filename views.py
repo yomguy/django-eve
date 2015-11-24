@@ -58,11 +58,14 @@ class Presta2Eve(object):
         elif professionals:
             self.professional = professionals[0]
             self.contact = self.professional.contact
-            self.organism = self.professional.organism_professional.all()[0]
+            orgs = self.professional.organism_professional.all()
+            if orgs:
+                self.organism = orgs[0]
             if self.professional.contact_email:
                 self.contact.email = self.professional.contact_email
-            elif self.organism.email:
-                self.contact.email = self.organism.email
+            elif self.organism:
+                if self.organism.email:
+                    self.contact.email = self.organism.email
         elif organisms:
             self.organism = organisms[0]
             self.professional = self.organism.professional

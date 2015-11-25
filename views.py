@@ -61,29 +61,20 @@ class Presta2Eve(object):
             orgs = self.professional.organism_professional.all()
             if orgs:
                 self.organism = orgs[0]
-            # TODO remplace-t-on les emails ?
-            if self.professional.contact_email:
-                self.contact.email = self.professional.contact_email
-            elif self.organism:
-                if self.organism.email:
-                    self.contact.email = self.organism.email
         elif organisms:
             self.organism = organisms[0]
             if self.organism:
                 self.professional = self.organism.professional
                 if self.professional:
                     self.contact = self.professional.contact
-                    if self.professional.contact_email:
-                        self.contact.email = self.professional.contact_email
                 else:
                     professionals = Professional.objects.filter(organism=self.organism)
                     if professionals:
                         self.professional = professionals[0]
                         self.contact = self.professional.contact
-                        # TODO idem email ?
-                        self.professional.contact_email = self.organism.email
-                        self.professional.save()
-                        self.contact.email = self.organism.email
+                if self.organism.email and not self.professional.contact_email:
+                    self.professional.contact_email = self.organism.email
+                    self.professional.save()
         else:
             emails = [ name + '@' + domain for name in names.split('.')]
             for name in names.split('.'):
@@ -115,6 +106,7 @@ class Presta2Eve(object):
         self.contact.firstname = self.contact.firstname or self.customer.firstname.capitalize()
         self.contact.confirmed = True
         self.contact.save()
+        self.logger.info('contact ID : ' + str(self.contact.id))
         if self.contact_created:
             self.logger.info('contact created : ' + str(self.contact.id))
         else:
@@ -269,20 +261,23 @@ class Presta2Eve(object):
                 self.professional = professionals[0]
                 self.logger.info('professional selected')
 
-    def add_contact_to_group(self, group_id):
+    def add_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        group_contact, c = GroupContact.objects.get_or_create(contact=self.contact, group=group)
-        if self.professional:
+        if self.professional and self.professional.contact_email != self.contact.email and not self.contact.email:
             self.add_professional_to_group(group_id)
-        if c:
-            self.logger.info('contact added to group : ' + group.name)
+        else:
+            group_contact, c = GroupContact.objects.get_or_create(contact=self.contact, group=group)
+            if self.professional:
+                self.add_professional_to_group(group_id)
+            if c:
+                self.logger.info('contact added to group : ' + group.name)
 
-    def remove_contact_from_group(self, group_id):
+    def remove_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
         groups = GroupContact.objects.filter(contact=self.contact, group=group)
         for g in groups:
             g.delete()
-            self.logger.info('contact group deleted : ' + group.name)
+            self.logger.info('contact deleted from group: ' + group.name)
         if self.professional:
             self.remove_professional_from_group(group_id)
 
@@ -297,33 +292,34 @@ class Presta2Eve(object):
         groups = GroupProfessional.objects.filter(professional=self.professional, group=group)
         for g in groups:
             g.delete()
-            self.logger.info('professional group deleted : ' + group.name)
+            self.logger.info('professional deleted from group: ' + group.name)
 
     def set_groups(self):
-        self.add_contact_to_group(393)
-        self.add_contact_to_group(4)
-        self.add_contact_to_group(5)
+        self.add_to_group(393)
+        self.add_to_group(4)
+        self.add_to_group(5)
 
         if self.professional or self.organism:
-            self.add_contact_to_group(390)
+            self.add_to_group(390)
 
         if 13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids:
-            self.add_contact_to_group(457)
+            self.add_to_group(457)
 
         group = GroupTable.objects.get(id=457)
-        groups = GroupContact.objects.filter(contact=self.contact, group=group)
-        if not (13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids) and groups:
-            self.remove_contact_from_group(457)
-            self.add_contact_to_group(458)
+        groups_contact = GroupContact.objects.filter(contact=self.contact, group=group)
+        groups_pro = GroupProfessional.objects.filter(contact=self.contact, group=group)
+        if not (13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids) and (groups_contact or groups_pro):
+            self.remove_from_group(457)
+            self.add_to_group(458)
 
         if 25 in self.ps_groups_ids or 35 in self.ps_groups_ids:
-            self.add_contact_to_group(459)
+            self.add_to_group(459)
 
         if self.is_forum and len(self.ps_groups_ids) == 1 and 11 in self.ps_groups_ids:
-            self.add_contact_to_group(46)
+            self.add_to_group(46)
 
         if not self.is_forum and 38 in self.ps_groups_ids:
-            self.add_contact_to_group(460)
+            self.add_to_group(460)
 
         print self.contact.name
         groups = GroupContact.objects.filter(contact=self.contact)

@@ -341,7 +341,7 @@ class Presta2Eve(object):
             self.logger.info(self.customer.firstname)
             self.logger.info(self.customer.lastname)
             self.logger.info(self.customer.email)
-            self.logger.info('Customer ID : ' + self.customer.id_customer)
+            self.logger.info('Customer ID : ' + str(self.customer.id_customer))
             self.set_contact()
             # self.set_version()
             self.set_index()

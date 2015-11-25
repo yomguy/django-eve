@@ -328,11 +328,6 @@ class Presta2Eve(object):
         if not self.is_forum and 38 in self.ps_groups_ids:
             self.add_to_group(460)
 
-        print self.contact.name
-        groups = GroupContact.objects.filter(contact=self.contact)
-        for g in groups:
-            print g.group_id
-
     def run(self):
         self.get_groups()
         self.get_contact()

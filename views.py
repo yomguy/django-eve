@@ -307,7 +307,9 @@ class Presta2Eve(object):
 
         group = GroupTable.objects.get(id=457)
         groups_contact = GroupContact.objects.filter(contact=self.contact, group=group)
-        groups_pro = GroupProfessional.objects.filter(contact=self.contact, group=group)
+        groups_pro = None
+        if self.professional:
+            groups_pro = GroupProfessional.objects.filter(professional=self.professional, group=group)
         if not (13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids) and (groups_contact or groups_pro):
             self.remove_from_group(457)
             self.add_to_group(458)

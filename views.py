@@ -106,11 +106,11 @@ class Presta2Eve(object):
         self.contact.firstname = self.contact.firstname or self.customer.firstname.capitalize()
         self.contact.confirmed = True
         self.contact.save()
-        self.logger.info('contact ID : ' + str(self.contact.id))
+        self.logger.info('Contact ID : ' + str(self.contact.id))
         if self.contact_created:
-            self.logger.info('contact created : ' + str(self.contact.id))
+            self.logger.info('Contact created')
         else:
-            self.logger.info('contact updated : ' + str(self.contact.id))
+            self.logger.info('Contact updated')
 
     def set_version(self):
         versions = ContactVersion.objects.filter(id=self.contact).order_by('-version')
@@ -125,7 +125,7 @@ class Presta2Eve(object):
         version.id = self.contact
         version.version = num
         version.save()
-        self.logger.info('version added')
+        self.logger.info('Contact version added')
 
     def create_index(self, field, keyword, position=0L):
         index, c = ContactIndex.objects.get_or_create(id=self.contact, field=field, keyword=keyword, position=position)
@@ -141,7 +141,7 @@ class Presta2Eve(object):
                 if keyword:
                     self.create_index(field='email', keyword=keyword, position=position)
                     position += 1L
-            self.logger.info('index updated')
+            self.logger.info('Index created')
 
     def set_lang(self):
         if self.customer.id_lang:
@@ -150,7 +150,7 @@ class Presta2Eve(object):
             self.ps_lang = PsLang.objects.get(iso_code=self.default_lang)
         self.contact.culture = self.contact.culture or self.ps_lang.name
         self.contact.save()
-        self.logger.info('culture updated')
+        self.logger.info('Culture updated')
 
     def set_gender(self):
         if self.customer.id_gender == 1 and self.ps_lang.iso_code == 'fr':
@@ -162,7 +162,7 @@ class Presta2Eve(object):
         elif self.customer.id_gender == 1 and self.ps_lang.iso_code == 'en':
             self.contact.title = 'Mrs.'
         self.contact.save()
-        self.logger.info('genre updated')
+        self.logger.info('Genre updated')
 
     def set_address(self):
         self.ps_addresses = PsAddress.objects.filter(id_customer=self.customer.id_customer, deleted=0)
@@ -190,7 +190,7 @@ class Presta2Eve(object):
                 self.contact.country = None
 
             self.contact.save()
-            self.logger.info('address updated')
+            self.logger.info('Address updated')
 
     def set_phonenumber(self):
         n = 2
@@ -199,27 +199,32 @@ class Presta2Eve(object):
                 number = self.ps_address.phone.replace(' ', '')
                 number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name='Fixe')
-                self.logger.info('phone updated')
+                if c:
+                    self.logger.info('Fix phone created')
+                else:
+                    self.logger.info('Fix phone updated')
 
                 number = self.ps_address.phone_mobile.replace(' ', '')
                 number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
             if self.ps_address.phone_mobile:
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=self.ps_address.phone_mobile, name='Mobile')
-                self.logger.info('mobile phone updated')
+                if c:
+                    self.logger.info('Mobile phone created')
+                else:
+                    self.logger.info('Mobile phone updated')
 
     def set_birthday(self):
         if self.customer.birthday:
             yobs = YOB.objects.filter(contact=self.contact)
             if yobs:
                 yob = yobs[0]
-                self.logger.info('birthday selected')
             else:
                 yob = YOB(contact=self.contact)
             yob.year = self.customer.birthday.year
             yob.month = self.customer.birthday.month
             yob.day = self.customer.birthday.day
             yob.save()
-            self.logger.info('birthday updated')
+            self.logger.info('Birthday updated')
 
     def set_organism(self):
         custom_field = PsCustomField.objects.get(id_custom_field=2)
@@ -233,9 +238,9 @@ class Presta2Eve(object):
                     if organisms:
                         if len(organisms) == 1:
                             self.organism = organisms[0]
-                            self.logger.info('organism selected')
+                            self.logger.info('Organism selected')
                         else:
-                            self.logger.info('organism NOT SELECTED')
+                            self.logger.info('Organism NOT SELECTED')
                     else:
                         self.organism = Organism(name=ps_organism.value)
                         if self.ps_addresses:
@@ -244,10 +249,10 @@ class Presta2Eve(object):
                             self.organism.city = self.contact.city
                             self.organism.country = self.contact.country
                             self.organism.save()
-                            self.logger.info('organism created')
+                            self.logger.info('Organism created')
                 else:
                     self.organism = organisms[0]
-                    self.logger.info('organism selected')
+                    self.logger.info('Organism selected')
 
     def set_professional(self):
         if self.organism:
@@ -256,10 +261,10 @@ class Presta2Eve(object):
                 self.professional = Professional(organism=self.organism, contact=self.contact)
                 self.professional.contact_email = self.professional.contact_email or self.contact.email
                 self.professional.save()
-                self.logger.info('professional created')
+                self.logger.info('Professional created')
             else:
                 self.professional = professionals[0]
-                self.logger.info('professional selected')
+                self.logger.info('Professional selected')
 
     def add_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
@@ -270,14 +275,14 @@ class Presta2Eve(object):
             if self.professional:
                 self.add_professional_to_group(group_id)
             if c:
-                self.logger.info('contact added to group : ' + group.name)
+                self.logger.info('Contact added to group : ' + group.name)
 
     def remove_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
         groups = GroupContact.objects.filter(contact=self.contact, group=group)
         for g in groups:
             g.delete()
-            self.logger.info('contact deleted from group: ' + group.name)
+            self.logger.info('Contact removed from group: ' + group.name)
         if self.professional:
             self.remove_professional_from_group(group_id)
 
@@ -285,14 +290,14 @@ class Presta2Eve(object):
         group = GroupTable.objects.get(id=group_id)
         group_professional, c = GroupProfessional.objects.get_or_create(professional=self.professional, group=group)
         if c:
-            self.logger.info('professional added to group : ' + group.name)
+            self.logger.info('Crofessional added to group : ' + group.name)
 
     def remove_professional_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
         groups = GroupProfessional.objects.filter(professional=self.professional, group=group)
         for g in groups:
             g.delete()
-            self.logger.info('professional deleted from group: ' + group.name)
+            self.logger.info('Crofessional removed from group: ' + group.name)
 
     def set_groups(self):
         self.add_to_group(393)
@@ -333,9 +338,10 @@ class Presta2Eve(object):
         self.get_contact()
         if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible:
             self.logger.info('*********************************************************')
+            self.logger.info(self.customer.firstname)
             self.logger.info(self.customer.lastname)
             self.logger.info(self.customer.email)
-            self.logger.info(self.customer.id_customer)
+            self.logger.info('Customer ID : ' + self.customer.id_customer)
             self.set_contact()
             # self.set_version()
             self.set_index()
@@ -347,5 +353,3 @@ class Presta2Eve(object):
             self.set_organism()
             self.set_professional()
             self.set_groups()
-        else:
-            print self.contact.email, self.contact.updated_at, self.customer.date_upd

@@ -263,7 +263,7 @@ class Presta2Eve(object):
 
     def add_to_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        if self.professional and self.professional.contact_email != self.contact.email and not self.contact.email:
+        if self.professional and self.professional.contact_email != self.contact.email:
             self.add_professional_to_group(group_id)
         else:
             group_contact, c = GroupContact.objects.get_or_create(contact=self.contact, group=group)

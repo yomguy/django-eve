@@ -34,7 +34,7 @@ class Accounting(models.Model):
 
 
 class AccountingVersion(models.Model):
-    id = models.ForeignKey(Accounting, db_column='id', primary_key=True)
+    id = models.ForeignKey(Accounting, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -77,7 +77,7 @@ class AddressableIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Addressable, db_column='id', primary_key=True)
+    id = models.ForeignKey(Addressable, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -86,7 +86,7 @@ class AddressableIndex(models.Model):
 
 
 class AddressableVersion(models.Model):
-    id = models.ForeignKey(Addressable, db_column='id', primary_key=True)
+    id = models.ForeignKey(Addressable, db_column='id')
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -126,7 +126,7 @@ class Attachment(models.Model):
 
 
 class AttachmentVersion(models.Model):
-    id = models.ForeignKey(Attachment, db_column='id', primary_key=True)
+    id = models.ForeignKey(Attachment, db_column='id')
     email_id = models.BigIntegerField()
     original_name = models.TextField(blank=True, null=True)
     filename = models.TextField(blank=True, null=True)
@@ -237,7 +237,7 @@ class BoughtProduct(models.Model):
 
 
 class BoughtProductVersion(models.Model):
-    id = models.ForeignKey(BoughtProduct, db_column='id', primary_key=True)
+    id = models.ForeignKey(BoughtProduct, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -283,7 +283,7 @@ class Cancellation(models.Model):
 
 
 class CancellationVersion(models.Model):
-    id = models.ForeignKey(Cancellation, db_column='id', primary_key=True)
+    id = models.ForeignKey(Cancellation, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -406,7 +406,7 @@ class ContactIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Contact, db_column='id', primary_key=True, related_name='indexes')
+    id = models.ForeignKey(Contact, db_column='id', related_name='indexes')
 
     class Meta(MetaCore):
         managed = False
@@ -449,7 +449,7 @@ class ContactRelationshipType(models.Model):
 
 
 class ContactVersion(models.Model):
-    id = models.ForeignKey(Contact, db_column='id', primary_key=True)
+    id = models.ForeignKey(Contact, db_column='id')
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -504,7 +504,7 @@ class Control(models.Model):
 
 
 class ControlVersion(models.Model):
-    id = models.ForeignKey(Control, db_column='id', primary_key=True)
+    id = models.ForeignKey(Control, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     ticket_id = models.BigIntegerField()
@@ -584,7 +584,7 @@ class EmailIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Email, db_column='id', primary_key=True)
+    id = models.ForeignKey(Email, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -741,7 +741,7 @@ class EventIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Event, db_column='id', primary_key=True)
+    id = models.ForeignKey(Event, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -750,7 +750,7 @@ class EventIndex(models.Model):
 
 
 class EventTranslation(models.Model):
-    id = models.ForeignKey(Event, db_column='id', primary_key=True)
+    id = models.ForeignKey(Event, db_column='id')
     name = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255, blank=True, null=True)
     short_name = models.CharField(max_length=127, blank=True, null=True)
@@ -766,7 +766,7 @@ class EventTranslation(models.Model):
 
 
 class EventVersion(models.Model):
-    id = models.ForeignKey(Event, db_column='id', primary_key=True)
+    id = models.ForeignKey(Event, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -820,7 +820,7 @@ class FailedControl(models.Model):
 
 
 class FailedControlVersion(models.Model):
-    id = models.ForeignKey(FailedControl, db_column='id', primary_key=True)
+    id = models.ForeignKey(FailedControl, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     ticket_id = models.CharField(max_length=255, blank=True, null=True)
@@ -916,7 +916,7 @@ class GroupAutoUser(models.Model):
 
 
 class GroupContact(models.Model):
-    group = models.ForeignKey('GroupTable', primary_key=True)
+    group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -939,7 +939,7 @@ class GroupDeleted(models.Model):
 
 
 class GroupDetail(models.Model):
-    group_id = models.BigIntegerField(primary_key=True)
+    group_id = models.BigIntegerField()
     information = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -950,7 +950,7 @@ class GroupDetail(models.Model):
 
 
 class GroupOrganism(models.Model):
-    group = models.ForeignKey('GroupTable', primary_key=True)
+    group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     organism = models.ForeignKey('Organism')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -963,7 +963,7 @@ class GroupOrganism(models.Model):
 
 
 class GroupProfessional(models.Model):
-    group = models.ForeignKey('GroupTable', primary_key=True)
+    group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     professional = models.ForeignKey('Professional')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -1055,7 +1055,7 @@ class HoldTransaction(models.Model):
 
 
 class HoldTransactionVersion(models.Model):
-    id = models.ForeignKey(HoldTransaction, db_column='id', primary_key=True)
+    id = models.ForeignKey(HoldTransaction, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -1073,7 +1073,7 @@ class HoldTransactionVersion(models.Model):
 
 
 class HoldTranslation(models.Model):
-    id = models.ForeignKey(Hold, db_column='id', primary_key=True)
+    id = models.ForeignKey(Hold, db_column='id')
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
@@ -1085,7 +1085,7 @@ class HoldTranslation(models.Model):
 
 
 class HoldVersion(models.Model):
-    id = models.ForeignKey(Hold, db_column='id', primary_key=True)
+    id = models.ForeignKey(Hold, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -1122,7 +1122,7 @@ class Invoice(models.Model):
 
 
 class InvoiceVersion(models.Model):
-    id = models.ForeignKey(Invoice, db_column='id', primary_key=True)
+    id = models.ForeignKey(Invoice, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -1154,7 +1154,7 @@ class Itemable(models.Model):
 
 
 class ItemableVersion(models.Model):
-    id = models.ForeignKey(Itemable, db_column='id', primary_key=True)
+    id = models.ForeignKey(Itemable, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -1226,7 +1226,7 @@ class LocationIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Location, db_column='id', primary_key=True)
+    id = models.ForeignKey(Location, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -1235,7 +1235,7 @@ class LocationIndex(models.Model):
 
 
 class LocationVersion(models.Model):
-    id = models.ForeignKey(Location, db_column='id', primary_key=True)
+    id = models.ForeignKey(Location, db_column='id')
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -1340,7 +1340,7 @@ class ManifestationExtraInformation(models.Model):
 
 
 class ManifestationExtraInformationVersion(models.Model):
-    id = models.ForeignKey(ManifestationExtraInformation, db_column='id', primary_key=True)
+    id = models.ForeignKey(ManifestationExtraInformation, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -1368,7 +1368,7 @@ class ManifestationOrganizer(models.Model):
 
 
 class ManifestationVersion(models.Model):
-    id = models.ForeignKey(Manifestation, db_column='id', primary_key=True)
+    id = models.ForeignKey(Manifestation, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     event_id = models.BigIntegerField()
@@ -1454,7 +1454,7 @@ class MemberCardPriceModel(models.Model):
 
 
 class MemberCardPriceModelVersion(models.Model):
-    id = models.ForeignKey(MemberCardPriceModel, db_column='id', primary_key=True)
+    id = models.ForeignKey(MemberCardPriceModel, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     member_card_type_id = models.BigIntegerField()
@@ -1473,7 +1473,7 @@ class MemberCardPriceModelVersion(models.Model):
 
 
 class MemberCardPriceVersion(models.Model):
-    id = models.ForeignKey(MemberCardPrice, db_column='id', primary_key=True)
+    id = models.ForeignKey(MemberCardPrice, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     member_card_id = models.BigIntegerField()
@@ -1503,7 +1503,7 @@ class MemberCardType(models.Model):
 
 
 class MemberCardTypeTranslation(models.Model):
-    id = models.ForeignKey(MemberCardType, db_column='id', primary_key=True)
+    id = models.ForeignKey(MemberCardType, db_column='id')
     description = models.CharField(max_length=255, blank=True, null=True)
     lang = models.CharField(max_length=2)
 
@@ -1524,7 +1524,7 @@ class MemberCardTypeUser(models.Model):
 
 
 class MemberCardVersion(models.Model):
-    id = models.ForeignKey(MemberCard, db_column='id', primary_key=True)
+    id = models.ForeignKey(MemberCard, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     contact_id = models.BigIntegerField(blank=True, null=True)
@@ -1556,7 +1556,7 @@ class MetaEvent(models.Model):
 
 
 class MetaEventTranslation(models.Model):
-    id = models.ForeignKey(MetaEvent, db_column='id', primary_key=True)
+    id = models.ForeignKey(MetaEvent, db_column='id')
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
@@ -1619,7 +1619,7 @@ class OrderTable(models.Model):
 
 
 class OrderVersion(models.Model):
-    id = models.ForeignKey(OrderTable, db_column='id', primary_key=True)
+    id = models.ForeignKey(OrderTable, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -1678,7 +1678,7 @@ class OrganismIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Organism, db_column='id', primary_key=True)
+    id = models.ForeignKey(Organism, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -1699,7 +1699,7 @@ class OrganismPhonenumber(models.Model):
 
 
 class OrganismVersion(models.Model):
-    id = models.ForeignKey(Organism, db_column='id', primary_key=True)
+    id = models.ForeignKey(Organism, db_column='id')
     name = models.CharField(max_length=255)
     address = models.TextField(blank=True, null=True)
     postalcode = models.CharField(max_length=10, blank=True, null=True)
@@ -1757,7 +1757,7 @@ class PaymentMethod(models.Model):
 
 
 class PaymentVersion(models.Model):
-    id = models.ForeignKey(Payment, db_column='id', primary_key=True)
+    id = models.ForeignKey(Payment, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -1803,7 +1803,7 @@ class Picture(models.Model):
 
 
 class PictureVersion(models.Model):
-    id = models.ForeignKey(Picture, db_column='id', primary_key=True)
+    id = models.ForeignKey(Picture, db_column='id')
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     content = models.BinaryField()
@@ -1892,7 +1892,7 @@ class PriceProduct(models.Model):
 
 
 class PriceTranslation(models.Model):
-    id = models.ForeignKey(Price, db_column='id', primary_key=True)
+    id = models.ForeignKey(Price, db_column='id')
     name = models.CharField(max_length=63)
     description = models.CharField(max_length=255, blank=True, null=True)
     lang = models.CharField(max_length=2)
@@ -1944,7 +1944,7 @@ class ProductCategoryIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(ProductCategory, db_column='id', primary_key=True)
+    id = models.ForeignKey(ProductCategory, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -1953,7 +1953,7 @@ class ProductCategoryIndex(models.Model):
 
 
 class ProductCategoryTranslation(models.Model):
-    id = models.ForeignKey(ProductCategory, db_column='id', primary_key=True)
+    id = models.ForeignKey(ProductCategory, db_column='id')
     name = models.CharField(max_length=255)
     lang = models.CharField(max_length=2)
 
@@ -1986,7 +1986,7 @@ class ProductDeclinationIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(ProductDeclination, db_column='id', primary_key=True)
+    id = models.ForeignKey(ProductDeclination, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -1995,7 +1995,7 @@ class ProductDeclinationIndex(models.Model):
 
 
 class ProductDeclinationTranslation(models.Model):
-    id = models.ForeignKey(ProductDeclination, db_column='id', primary_key=True)
+    id = models.ForeignKey(ProductDeclination, db_column='id')
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     description_for_buyers = models.TextField(blank=True, null=True)
@@ -2008,7 +2008,7 @@ class ProductDeclinationTranslation(models.Model):
 
 
 class ProductDeclinationVersion(models.Model):
-    id = models.ForeignKey(ProductDeclination, db_column='id', primary_key=True)
+    id = models.ForeignKey(ProductDeclination, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -2036,7 +2036,7 @@ class ProductIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Product, db_column='id', primary_key=True)
+    id = models.ForeignKey(Product, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -2100,7 +2100,7 @@ class ProductProductLink(models.Model):
 
 
 class ProductTranslation(models.Model):
-    id = models.ForeignKey(Product, db_column='id', primary_key=True)
+    id = models.ForeignKey(Product, db_column='id')
     name = models.CharField(max_length=255)
     short_name = models.CharField(max_length=127, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -2113,7 +2113,7 @@ class ProductTranslation(models.Model):
 
 
 class ProductVersion(models.Model):
-    id = models.ForeignKey(Product, db_column='id', primary_key=True)
+    id = models.ForeignKey(Product, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -2236,7 +2236,7 @@ class RawAccounting(models.Model):
 
 
 class RawAccountingVersion(models.Model):
-    id = models.ForeignKey(RawAccounting, db_column='id', primary_key=True)
+    id = models.ForeignKey(RawAccounting, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     accounting_id = models.BigIntegerField(blank=True, null=True)
@@ -2311,7 +2311,7 @@ class SeatedPlan(models.Model):
 
 
 class SeatedPlanVersion(models.Model):
-    id = models.ForeignKey(SeatedPlan, db_column='id', primary_key=True)
+    id = models.ForeignKey(SeatedPlan, db_column='id')
     seat_diameter = models.BigIntegerField()
     description = models.TextField(blank=True, null=True)
     picture_id = models.BigIntegerField(blank=True, null=True)
@@ -2482,7 +2482,7 @@ class SurveyAnswerIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(SurveyAnswer, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyAnswer, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -2491,7 +2491,7 @@ class SurveyAnswerIndex(models.Model):
 
 
 class SurveyAnswerVersion(models.Model):
-    id = models.ForeignKey(SurveyAnswer, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyAnswer, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     survey_query_id = models.BigIntegerField()
@@ -2525,7 +2525,7 @@ class SurveyAnswersGroup(models.Model):
 
 
 class SurveyAnswersGroupVersion(models.Model):
-    id = models.ForeignKey(SurveyAnswersGroup, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyAnswersGroup, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     survey_id = models.BigIntegerField()
@@ -2564,7 +2564,7 @@ class SurveyApplyTo(models.Model):
 
 
 class SurveyApplyToVersion(models.Model):
-    id = models.ForeignKey(SurveyApplyTo, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyApplyTo, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     survey_id = models.BigIntegerField()
@@ -2590,7 +2590,7 @@ class SurveyIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Survey, db_column='id', primary_key=True)
+    id = models.ForeignKey(Survey, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -2621,7 +2621,7 @@ class SurveyQueryIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(SurveyQuery, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyQuery, db_column='id')
 
     class Meta(MetaCore):
         managed = False
@@ -2639,7 +2639,7 @@ class SurveyQueryOption(models.Model):
 
 
 class SurveyQueryOptionTranslation(models.Model):
-    id = models.ForeignKey(SurveyQueryOption, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyQueryOption, db_column='id')
     name = models.CharField(max_length=255)
     lang = models.CharField(max_length=2)
 
@@ -2650,7 +2650,7 @@ class SurveyQueryOptionTranslation(models.Model):
 
 
 class SurveyQueryTranslation(models.Model):
-    id = models.ForeignKey(SurveyQuery, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyQuery, db_column='id')
     name = models.TextField()
     lang = models.CharField(max_length=2)
 
@@ -2661,7 +2661,7 @@ class SurveyQueryTranslation(models.Model):
 
 
 class SurveyQueryVersion(models.Model):
-    id = models.ForeignKey(SurveyQuery, db_column='id', primary_key=True)
+    id = models.ForeignKey(SurveyQuery, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.TextField()
@@ -2683,7 +2683,7 @@ class SurveyQueryVersion(models.Model):
 
 
 class SurveyTranslation(models.Model):
-    id = models.ForeignKey(Survey, db_column='id', primary_key=True)
+    id = models.ForeignKey(Survey, db_column='id')
     description = models.TextField(blank=True, null=True)
     lang = models.CharField(max_length=2)
 
@@ -2694,7 +2694,7 @@ class SurveyTranslation(models.Model):
 
 
 class SurveyVersion(models.Model):
-    id = models.ForeignKey(Survey, db_column='id', primary_key=True)
+    id = models.ForeignKey(Survey, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -2755,7 +2755,7 @@ class TaxUser(models.Model):
 
 
 class TaxVersion(models.Model):
-    id = models.ForeignKey(Tax, db_column='id', primary_key=True)
+    id = models.ForeignKey(Tax, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     name = models.CharField(max_length=255)
@@ -2806,7 +2806,7 @@ class Ticket(models.Model):
 
 
 class TicketVersion(models.Model):
-    id = models.ForeignKey(Ticket, db_column='id', primary_key=True)
+    id = models.ForeignKey(Ticket, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     transaction_id = models.BigIntegerField()
@@ -2852,7 +2852,7 @@ class Traceable(models.Model):
 
 
 class TraceableVersion(models.Model):
-    id = models.ForeignKey(Traceable, db_column='id', primary_key=True)
+    id = models.ForeignKey(Traceable, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2887,7 +2887,7 @@ class Transaction(models.Model):
 
 
 class TransactionVersion(models.Model):
-    id = models.ForeignKey(Transaction, db_column='id', primary_key=True)
+    id = models.ForeignKey(Transaction, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     contact_id = models.BigIntegerField(blank=True, null=True)
@@ -2940,7 +2940,7 @@ class Vat(models.Model):
 
 
 class VatVersion(models.Model):
-    id = models.ForeignKey(Vat, db_column='id', primary_key=True)
+    id = models.ForeignKey(Vat, db_column='id')
     name = models.CharField(max_length=64)
     value = models.DecimalField(max_digits=5, decimal_places=4)
     accounting_account = models.CharField(max_length=50, blank=True, null=True)
@@ -2982,7 +2982,7 @@ class WebOriginIp(models.Model):
 
 
 class WebOriginVersion(models.Model):
-    id = models.ForeignKey(WebOrigin, db_column='id', primary_key=True)
+    id = models.ForeignKey(WebOrigin, db_column='id')
     sf_guard_user_id = models.BigIntegerField(blank=True, null=True)
     automatic = models.BooleanField(default=False)
     first_page = models.TextField()

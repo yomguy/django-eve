@@ -279,10 +279,9 @@ class Presta2Eve(object):
 
     def remove_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        groups = GroupContact.objects.filter(contact=self.contact, group=group)
-        for g in groups:
-            g.delete()
-            self.logger.info('Contact removed from group: ' + group.name)
+        group_contact = GroupContact.objects.filter(contact=self.contact, group=group)
+        group_contact.delete()
+        self.logger.info('Contact removed from group: ' + group.name)
         if self.professional:
             self.remove_professional_from_group(group_id)
 
@@ -294,10 +293,9 @@ class Presta2Eve(object):
 
     def remove_professional_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
-        groups = GroupProfessional.objects.filter(professional=self.professional, group=group)
-        for g in groups:
-            g.delete()
-            self.logger.info('Professional removed from group: ' + group.name)
+        group_professional = GroupProfessional.objects.filter(professional=self.professional, group=group)
+        group_professional.delete()
+        self.logger.info('Professional removed from group: ' + group.name)
 
     def set_groups(self):
         self.add_to_group(393)
@@ -310,9 +308,9 @@ class Presta2Eve(object):
         if 13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids:
             self.add_to_group(457)
 
+        groups_pro = None
         group = GroupTable.objects.get(id=457)
         groups_contact = GroupContact.objects.filter(contact=self.contact, group=group)
-        groups_pro = None
         if self.professional:
             groups_pro = GroupProfessional.objects.filter(professional=self.professional, group=group)
         if not (13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids) and (groups_contact or groups_pro):

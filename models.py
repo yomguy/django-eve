@@ -916,10 +916,10 @@ class GroupAutoUser(models.Model):
 
 
 class GroupContact(models.Model):
-    group = models.ForeignKey('GroupTable')
+    group = models.ForeignKey('GroupTable', primary_key=True)
     information = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact)
-    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):

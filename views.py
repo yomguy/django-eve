@@ -276,11 +276,6 @@ class Presta2Eve(object):
                 self.add_professional_to_group(group_id)
             if c:
                 self.logger.info('Contact added to group : ' + group.name)
-            
-            print self.contact.name
-            for g in self.contact.groupcontact_set.all():
-                print g.group_id
-            print group_contact.group_id
 
     def remove_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)

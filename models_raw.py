@@ -413,6 +413,7 @@ class ContactIndex(models.Model):
     position = models.BigIntegerField()
     id = models.ForeignKey(Contact, db_column='id')
 
+
     class Meta:
         managed = False
         db_table = 'contact_index'

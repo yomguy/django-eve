@@ -8,6 +8,7 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 from presta.models import PsCustomer
 from eve.utils import Logger
@@ -17,6 +18,9 @@ from eve.views import Presta2Eve
 class Command(BaseCommand):
 
     help = "Copy/Update contacts from a PrestaShop DB into a E-venement DB"
+
+    mail_from = 'guillame.pellerin@ircam.fr'
+    mail_to = 'caroline.palmier@ircam.fr'
 
     test_customers = ['julie.pak@gmail.com',
                         'remi.test@gmail.com',
@@ -64,7 +68,7 @@ class Command(BaseCommand):
                 customer.save()
             p2e = Presta2Eve(customer, logger)
             p2e.run()
-            
+
         try:
             from eve.utils import AuditLogger
             audit_logger = AuditLogger(log_file + '.audit', start_time)

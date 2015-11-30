@@ -277,6 +277,10 @@ class Presta2Eve(object):
             if c:
                 self.logger.info('Contact added to group : ' + group.name)
 
+            for g in self.contact.groupcontact_set.all():
+                print g.group_id
+            print group_contact.group_id
+
     def remove_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
         groups = GroupContact.objects.filter(contact=self.contact, group=group)
@@ -290,14 +294,14 @@ class Presta2Eve(object):
         group = GroupTable.objects.get(id=group_id)
         group_professional, c = GroupProfessional.objects.get_or_create(professional=self.professional, group=group)
         if c:
-            self.logger.info('Crofessional added to group : ' + group.name)
+            self.logger.info('Professional added to group : ' + group.name)
 
     def remove_professional_from_group(self, group_id):
         group = GroupTable.objects.get(id=group_id)
         groups = GroupProfessional.objects.filter(professional=self.professional, group=group)
         for g in groups:
             g.delete()
-            self.logger.info('Crofessional removed from group: ' + group.name)
+            self.logger.info('Professional removed from group: ' + group.name)
 
     def set_groups(self):
         self.add_to_group(393)

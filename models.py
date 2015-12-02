@@ -930,7 +930,7 @@ class GroupContact(models.Model):
 
 class GroupDeleted(models.Model):
     group = models.ForeignKey('GroupTable')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -941,7 +941,7 @@ class GroupDeleted(models.Model):
 class GroupDetail(models.Model):
     group_id = models.BigIntegerField()
     information = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -953,7 +953,7 @@ class GroupOrganism(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     organism = models.ForeignKey('Organism')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -966,7 +966,7 @@ class GroupProfessional(models.Model):
     group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     professional = models.ForeignKey('Professional')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -982,7 +982,7 @@ class GroupTable(models.Model):
     slug = models.TextField(blank=True, null=True)
     picture = models.ForeignKey('Picture', blank=True, null=True)
     display_everywhere = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -994,7 +994,7 @@ class GroupUser(models.Model):
     group = models.ForeignKey(GroupTable)
     information = models.TextField(blank=True, null=True)
     sf_guard_user = models.ForeignKey('SfGuardUser')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):
@@ -1004,7 +1004,7 @@ class GroupUser(models.Model):
 
 
 class GroupWorkspace(models.Model):
-    workspace = models.ForeignKey('Workspace')
+    workspace = models.ForeignKey('Workspace', primary_key=True)
 
     class Meta(MetaCore):
         managed = False

@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 
 from presta.models import PsCustomer
+from eve.models import Contact
 from eve.utils import Logger
 from eve.views import Presta2Eve
 
@@ -54,13 +55,18 @@ class Command(BaseCommand):
         test =  kwargs.get('test')
         update =  kwargs.get('update')
         logger = Logger(log_file)
+        new_contacts = 0
+        updated_contacts = 0
+        contacts = Contact.objects.all()
 
         if test:
             customers = []
             for email in self.test_customers:
                 customers.append(PsCustomer.objects.get(email=email))
+            n_customers = len(customers)
         else:
             customers = PsCustomer.objects.all()
+            n_customers = customers.count()
 
         for customer in customers:
             if update:
@@ -68,10 +74,14 @@ class Command(BaseCommand):
                 customer.save()
             p2e = Presta2Eve(customer, logger)
             p2e.run()
+            if p2e.contact_created:
+                new_contacts += 1
+            else:
+                updated_contacts += 1
 
-        try:
-            from eve.utils import AuditLogger
-            audit_logger = AuditLogger(log_file + '.audit', start_time)
-            audit_logger.write()
-        except:
-            pass
+        logger.logger.info('*********************************************************')
+        logger.logger.info('Total PrestaShop customers : ' + str(n_customers))
+        logger.logger.info('Total E-venement contacts : ' + str(contacts.count()))
+        logger.logger.info('Total created contacts : ' + str(new_contacts))
+        logger.logger.info('Total updated contacts : ' + str(updated_contacts))
+        logger.logger.info('*********************************************************')

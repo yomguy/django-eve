@@ -982,7 +982,7 @@ class GroupTable(models.Model):
     slug = models.TextField(blank=True, null=True)
     picture = models.ForeignKey('Picture', blank=True, null=True)
     display_everywhere = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):

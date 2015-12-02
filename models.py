@@ -406,7 +406,7 @@ class ContactIndex(models.Model):
     keyword = models.CharField(max_length=200)
     field = models.CharField(max_length=50)
     position = models.BigIntegerField()
-    id = models.ForeignKey(Contact, db_column='id', primary_key=True, related_name='indexes')
+    id = models.ForeignKey(Contact, db_column='id', related_name='indexes', primary_key=True)
 
     class Meta(MetaCore):
         managed = False
@@ -916,10 +916,10 @@ class GroupAutoUser(models.Model):
 
 
 class GroupContact(models.Model):
-    group = models.ForeignKey('GroupTable', primary_key=True)
+    group = models.ForeignKey('GroupTable')
     information = models.TextField(blank=True, null=True)
     contact = models.ForeignKey(Contact)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, primary_key=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta(MetaCore):

@@ -3,6 +3,7 @@
 # Licence: MIT
 
 from django.shortcuts import render
+from django.db import connections
 
 import re
 from eve.models import *
@@ -130,16 +131,21 @@ class Presta2Eve(object):
     def create_index(self, field, keyword, position=0L):
         index, c = ContactIndex.objects.get_or_create(id=self.contact, field=field, keyword=keyword, position=position)
 
+    def create_index_raw(self, field='name', keyword='unknown', position=0L):
+        cursor = connections['eve'].cursor()
+        command = 'INSERT INTO contact_index (id, field, keyword, position) VALUES (%s, %s, %s, %s)'
+        cursor.execute(command, [self.contact.id, field, keyword, position])
+
     def set_index(self):
         if self.contact_created:
-            self.create_index(field='name', keyword=self.contact.name)
+            self.create_index_raw(field='name', keyword=self.contact.name)
             if self.contact.firstname:
-                self.create_index(field='firstname', keyword=self.contact.firstname)
+                self.create_index_raw(field='firstname', keyword=self.contact.firstname)
             keywords = re.split('\.|\@', self.contact.email)
             position = 0L
             for keyword in keywords:
                 if keyword:
-                    self.create_index(field='email', keyword=keyword, position=position)
+                    self.create_index_raw(field='email', keyword=keyword, position=position)
                     position += 1L
             self.logger.info('Index created')
 
@@ -325,6 +331,10 @@ class Presta2Eve(object):
 
         if not self.is_forum and 38 in self.ps_groups_ids:
             self.add_to_group(460)
+
+        groups_contact = GroupContact.objects.filter(contact=self.contact)
+        for g in groups_contact:
+            print self.contact.name, g.group.name
 
     def run(self):
         self.get_groups()

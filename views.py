@@ -22,7 +22,7 @@ class Presta2Eve(object):
         self.addresss = ''
         self.test_group_id = 40
         self.forum_group_id = 39
-        self.default_group_id = 11
+        self.default_group_id = 1
         self.is_elligible = True
         if not logger:
             logger = Logger('/tmp/presta2eve.log')
@@ -165,7 +165,7 @@ class Presta2Eve(object):
             self.contact.title = 'Mr.'
         elif self.customer.id_gender == 2 and self.ps_lang.iso_code == 'fr':
             self.contact.title = 'Madame'
-        elif self.customer.id_gender == 1 and self.ps_lang.iso_code == 'en':
+        elif self.customer.id_gender == 2 and self.ps_lang.iso_code == 'en':
             self.contact.title = 'Mrs.'
         self.contact.save()
         self.logger.info('Genre updated')
@@ -308,7 +308,7 @@ class Presta2Eve(object):
         self.add_to_group(4)
         self.add_to_group(5)
 
-        if self.professional or self.organism:
+        if (self.professional or self.organism) and self.is_forum:
             self.add_to_group(390)
 
         if 13 in self.ps_groups_ids or 14 in self.ps_groups_ids or 15 in self.ps_groups_ids:

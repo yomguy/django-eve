@@ -33,7 +33,8 @@ class Command(BaseCommand):
                         'atorrino@tasty.com',
                         'axel.rose@gunsnroses.com',
                         'paul.stanley@kiss.com',
-                        'd.grohl@foofighters.com']
+                        'd.grohl@foofighters.com',
+                        't.dernier@cite-musique.fr']
 
     option_list = BaseCommand.option_list + (
           make_option('-l', '--log',
@@ -80,8 +81,8 @@ class Command(BaseCommand):
                 updated_contacts += 1
 
         logger.logger.info('*********************************************************')
-        logger.logger.info('Total PrestaShop customers : ' + str(n_customers))
-        logger.logger.info('Total E-venement contacts : ' + str(contacts.count()))
-        logger.logger.info('Total created contacts : ' + str(new_contacts))
-        logger.logger.info('Total updated contacts : ' + str(updated_contacts))
+        logger.logger.info('Total PrestaShop treated customers : ' + str(n_customers))
+        logger.logger.info('Total E-venement existing contacts : ' + str(contacts.count()))
+        logger.logger.info('Total E-venement created contacts : ' + str(new_contacts))
+        logger.logger.info('Total E-venementupdated contacts : ' + str(updated_contacts))
         logger.logger.info('*********************************************************')

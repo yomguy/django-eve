@@ -77,7 +77,7 @@ class Command(BaseCommand):
             p2e.run()
             if p2e.contact_created:
                 new_contacts += 1
-            else:
+            elif p2e.contact_updated:
                 updated_contacts += 1
 
         logger.logger.info('*********************************************************')

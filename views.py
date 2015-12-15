@@ -28,6 +28,8 @@ class Presta2Eve(object):
         if not logger:
             logger = Logger('/tmp/presta2eve.log')
         self.logger = logger.logger
+        self.contact_created = False
+        self.contact_updated = False
 
     def get_groups(self):
         self.ps_groups = PsCustomerGroup.objects.filter(id_customer=self.customer.id_customer)
@@ -44,18 +46,19 @@ class Presta2Eve(object):
             self.is_test = True
             self.ps_groups_ids.remove(self.test_group_id)
 
-        if len(self.ps_groups_ids) == 1 and self.default_group_id in self.ps_groups_ids:
-            self.is_elligible = False
+        # maybe for forum ?
+        # if len(self.ps_groups_ids) == 1 and self.default_group_id in self.ps_groups_ids:
+        #     self.is_elligible = False
 
     def get_contact(self):
         contacts = Contact.objects.filter(email=self.customer.email)
         professionals = Professional.objects.filter(contact_email=self.customer.email)
         organisms = Organism.objects.filter(email=self.customer.email)
         names, domain = self.customer.email.split('@')
-        self.contact_created = False
 
         if contacts:
             self.contact = contacts[0]
+            self.updated_contact = True
             # self.set_version()
         elif professionals:
             self.professional = professionals[0]
@@ -113,6 +116,7 @@ class Presta2Eve(object):
         if self.contact_created:
             self.logger.info('Contact created')
         else:
+            self.contact_updated = True
             self.logger.info('Contact updated')
 
     def set_version(self):

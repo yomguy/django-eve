@@ -342,7 +342,7 @@ class Presta2Eve(object):
     def run(self):
         self.get_groups()
         self.get_contact()
-        if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible and not self.forum:
+        if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible and not self.is_forum:
             self.logger.info('*********************************************************')
             self.logger.info(self.customer.firstname)
             self.logger.info(self.customer.lastname)

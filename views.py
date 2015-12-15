@@ -303,11 +303,7 @@ class Presta2Eve(object):
         group_professional.delete()
         self.logger.info('Professional removed from group: ' + group.name)
 
-    def set_groups(self):
-        self.add_to_group(393)
-        self.add_to_group(4)
-        self.add_to_group(5)
-
+    def set_groups_forum(self):
         if (self.professional or self.organism) and self.is_forum:
             self.add_to_group(390)
 
@@ -329,8 +325,19 @@ class Presta2Eve(object):
         if self.is_forum and len(self.ps_groups_ids) == 1 and 11 in self.ps_groups_ids:
             self.add_to_group(46)
 
+    def set_groups_peda(self):
+        self.add_to_group(393)
+        self.add_to_group(4)
+        self.add_to_group(5)
+
         if not self.is_forum and 38 in self.ps_groups_ids:
             self.add_to_group(460)
+
+    def set_groups(self):
+        if self.is_forum:
+            self.set_groups_forum()
+        else:
+            self.set_groups_peda()
 
     def run(self):
         self.get_groups()

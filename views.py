@@ -19,6 +19,7 @@ class Presta2Eve(object):
         self.customer = customer
         self.professional = None
         self.organism = None
+        self.contact = None
         self.addresss = ''
         self.test_group_id = 40
         self.forum_group_id = 39
@@ -343,20 +344,21 @@ class Presta2Eve(object):
     def run(self):
         self.get_groups()
         self.get_contact()
-        if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible and not self.is_forum:
-            self.logger.info('*********************************************************')
-            self.logger.info(self.customer.firstname)
-            self.logger.info(self.customer.lastname)
-            self.logger.info(self.customer.email)
-            self.logger.info('Customer ID : ' + str(self.customer.id_customer))
-            self.set_contact()
-            # self.set_version()
-            self.set_index()
-            self.set_lang()
-            self.set_gender()
-            self.set_address()
-            self.set_phonenumber()
-            self.set_birthday()
-            self.set_organism()
-            self.set_professional()
-            self.set_groups()
+        if self.contact:
+            if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible and not self.is_forum:
+                self.logger.info('*********************************************************')
+                self.logger.info(self.customer.firstname)
+                self.logger.info(self.customer.lastname)
+                self.logger.info(self.customer.email)
+                self.logger.info('Customer ID : ' + str(self.customer.id_customer))
+                self.set_contact()
+                # self.set_version()
+                self.set_index()
+                self.set_lang()
+                self.set_gender()
+                self.set_address()
+                self.set_phonenumber()
+                self.set_birthday()
+                self.set_organism()
+                self.set_professional()
+                self.set_groups()

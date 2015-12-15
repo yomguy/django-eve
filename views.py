@@ -264,6 +264,7 @@ class Presta2Eve(object):
 
     def set_professional(self):
         if self.organism:
+            self.organism.save()
             professionals = Professional.objects.filter(organism=self.organism, contact=self.contact)
             if not professionals:
                 self.professional = Professional(organism=self.organism, contact=self.contact)

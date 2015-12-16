@@ -84,5 +84,5 @@ class Command(BaseCommand):
         logger.logger.info('Total PrestaShop treated customers : ' + str(n_customers))
         logger.logger.info('Total E-venement existing contacts : ' + str(contacts.count()))
         logger.logger.info('Total E-venement created contacts : ' + str(new_contacts))
-        logger.logger.info('Total E-venementupdated contacts : ' + str(updated_contacts))
+        logger.logger.info('Total E-venement updated contacts : ' + str(updated_contacts))
         logger.logger.info('*********************************************************')

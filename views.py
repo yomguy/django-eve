@@ -58,7 +58,6 @@ class Presta2Eve(object):
 
         if contacts:
             self.contact = contacts[0]
-            self.updated_contact = True
             # self.set_version()
         elif professionals:
             self.professional = professionals[0]
@@ -350,7 +349,8 @@ class Presta2Eve(object):
         self.get_groups()
         self.get_contact()
         if self.contact:
-            if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) and self.is_elligible and not self.is_forum:
+            if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) \
+            and self.is_elligible and not self.is_forum and not self.is_test:
                 self.logger.info('*********************************************************')
                 self.logger.info(self.customer.firstname)
                 self.logger.info(self.customer.lastname)

@@ -59,7 +59,8 @@ class Command(BaseCommand):
         new_contacts = 0
         updated_contacts = 0
         contacts = Contact.objects.all()
-
+        force = test
+        
         if test:
             customers = []
             for email in self.test_customers:
@@ -73,7 +74,7 @@ class Command(BaseCommand):
             if update:
                 customer.date_upd = datetime.datetime.now()
                 customer.save()
-            p2e = Presta2Eve(customer, logger)
+            p2e = Presta2Eve(customer, logger, force)
             p2e.run()
             if p2e.contact_created:
                 new_contacts += 1

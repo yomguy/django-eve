@@ -15,7 +15,7 @@ class Presta2Eve(object):
 
     default_lang = 'fr'
 
-    def __init__(self, customer, logger=None):
+    def __init__(self, customer, logger=None, force=False):
         self.customer = customer
         self.professional = None
         self.organism = None
@@ -30,6 +30,7 @@ class Presta2Eve(object):
         self.logger = logger.logger
         self.contact_created = False
         self.contact_updated = False
+        self.force = force
 
     def get_groups(self):
         self.ps_groups = PsCustomerGroup.objects.filter(id_customer=self.customer.id_customer)
@@ -350,7 +351,7 @@ class Presta2Eve(object):
         self.get_contact()
         if self.contact:
             if (self.contact_created or (self.contact.updated_at and self.contact.updated_at < self.customer.date_upd)) \
-            and self.is_elligible and not self.is_forum and not self.is_test:
+            and self.is_elligible and not self.is_forum and (not self.is_test or self.force):
                 self.logger.info('*********************************************************')
                 self.logger.info(self.customer.firstname)
                 self.logger.info(self.customer.lastname)

@@ -20,8 +20,8 @@ class Command(BaseCommand):
 
     help = "Copy/Update contacts from a PrestaShop DB into a E-venement DB"
 
-    from_email = 'guillame.pellerin@ircam.fr'
-    to_email = ['caroline.palmier@ircam.fr', 'guillame.pellerin@ircam.fr']
+    from_email = 'guillaume.pellerin@ircam.fr'
+    to_email = ['caroline.palmier@ircam.fr', 'guillaume.pellerin@ircam.fr']
     # to_email = ['yomguy@localhost',]
 
     test_customers = ['julie.pak@gmail.com',
@@ -88,7 +88,7 @@ class Command(BaseCommand):
                 customer.save()
             p2e = Presta2Eve(customer, logger, force)
             p2e.run()
-            if p2e.contact_created:
+            if p2e.contact_added:
                 new_contacts += 1
             elif p2e.contact_updated:
                 updated_contacts += 1

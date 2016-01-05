@@ -30,6 +30,7 @@ class Presta2Eve(object):
         self.logger = logger.logger
         self.contact_created = False
         self.contact_updated = False
+        self.contact_added = False
         self.force = force
 
     def get_groups(self):
@@ -114,6 +115,7 @@ class Presta2Eve(object):
         self.contact.save()
         self.logger.info('Contact ID : ' + str(self.contact.id))
         if self.contact_created:
+            self.contact_added = True
             self.logger.info('Contact created')
         else:
             self.contact_updated = True

@@ -2,13 +2,13 @@
 # Copyright (C) 2015 Guillaume Pellerin <guillaume.pellerin@ircam.fr>
 # Licence: MIT
 
-import datetime
+import os, datetime
 from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 from presta.models import PsCustomer
 from eve.models import Contact
@@ -20,8 +20,9 @@ class Command(BaseCommand):
 
     help = "Copy/Update contacts from a PrestaShop DB into a E-venement DB"
 
-    mail_from = 'guillame.pellerin@ircam.fr'
-    mail_to = 'caroline.palmier@ircam.fr'
+    from_email = 'guillame.pellerin@ircam.fr'
+    # to_email = ['caroline.palmier@ircam.fr', 'guillame.pellerin@ircam.fr']
+    to_email = ['yomguy@localhost',]
 
     test_customers = ['julie.pak@gmail.com',
                         'remi.test@gmail.com',
@@ -37,9 +38,9 @@ class Command(BaseCommand):
                         't.dernier@cite-musique.fr']
 
     option_list = BaseCommand.option_list + (
-          make_option('-l', '--log',
-            dest='log',
-            help='define log file'),
+          make_option('-l', '--log_dir',
+            dest='log_dir',
+            help='define log dir'),
           make_option('-t', '--test',
             action='store_true',
             dest='test',
@@ -52,19 +53,30 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         start_time = datetime.datetime.now()
-        log_file = kwargs.get('log')
+        log_dir = kwargs.get('log_dir')
         test =  kwargs.get('test')
         update =  kwargs.get('update')
-        logger = Logger(log_file)
         new_contacts = 0
         updated_contacts = 0
         contacts = Contact.objects.all()
         force = test
-        
+
+        if not os.path.exists(log_dir):
+            os.makedirs(log_dir)
+
+        date = datetime.datetime.now()
+        log_filename = 'presta2eve_' + date.isoformat() + '.log'
+        log_file = os.path.abspath(os.path.join(log_dir, log_filename))
+        logger = Logger(log_file)
+
         if test:
             customers = []
             for email in self.test_customers:
-                customers.append(PsCustomer.objects.get(email=email))
+                try:
+                    customer = PsCustomer.objects.get(email=email)
+                    customers.append(customer)
+                except:
+                    pass
             n_customers = len(customers)
         else:
             customers = PsCustomer.objects.all()
@@ -87,3 +99,8 @@ class Command(BaseCommand):
         logger.logger.info('Total E-venement created contacts : ' + str(new_contacts))
         logger.logger.info('Total E-venement updated contacts : ' + str(updated_contacts))
         logger.logger.info('*********************************************************')
+
+        email = EmailMessage(subject='Presta2Eve logger', body='The log file is in attachment.',
+                    from_email=self.from_email, to=self.to_email)
+        email.attach_file(log_file, 'text/plain')
+        email.send()

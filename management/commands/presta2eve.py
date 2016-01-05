@@ -21,8 +21,8 @@ class Command(BaseCommand):
     help = "Copy/Update contacts from a PrestaShop DB into a E-venement DB"
 
     from_email = 'guillame.pellerin@ircam.fr'
-    # to_email = ['caroline.palmier@ircam.fr', 'guillame.pellerin@ircam.fr']
-    to_email = ['yomguy@localhost',]
+    to_email = ['caroline.palmier@ircam.fr', 'guillame.pellerin@ircam.fr']
+    # to_email = ['yomguy@localhost',]
 
     test_customers = ['julie.pak@gmail.com',
                         'remi.test@gmail.com',

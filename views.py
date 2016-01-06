@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Copyright (C) 2015 Guillaume Pellerin <guillaume.pellerin@ircam.fr>
-# Licence: MIT
+# Licence: GPLv3
 
 from django.shortcuts import render
 from django.db import connections

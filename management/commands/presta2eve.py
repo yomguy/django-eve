@@ -100,7 +100,10 @@ class Command(BaseCommand):
         logger.logger.info('Total E-venement updated contacts : ' + str(updated_contacts))
         logger.logger.info('*********************************************************')
 
-        email = EmailMessage(subject='Presta2Eve logger', body='The log file is in attachment.',
-                    from_email=self.from_email, to=self.to_email)
+        subject = 'Presta2Eve logger'
+        if test:
+            subject += ' TEST'
+        body = 'The log file is in attachment.'
+        email = EmailMessage(subject=subject, body=body, from_email=self.from_email, to=self.to_email)
         email.attach_file(log_file, 'text/plain')
         email.send()

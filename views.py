@@ -207,25 +207,22 @@ class Presta2Eve(object):
             self.logger.info('Address updated')
 
     def set_phonenumber(self):
-        n = 2
+
+        def setup_phonenumber(orig_number, name):
+            number = orig_number.replace(' ', '')
+            number = ' '.join([number[i:i+n] for i in range(0, len(number), 2)])
+            if not ContactPhonenumber.objects.filter(contact=self.contact, number=number) or ContactPhonenumber.objects.filter(contact=self.contact, number=orig_number):
+                phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name=name)
+                if c:
+                    self.logger.info(name + ' phone created')
+                else:
+                    self.logger.info(name + ' phone updated')
+
         if self.ps_address:
             if self.ps_address.phone:
-                number = self.ps_address.phone.replace(' ', '')
-                number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
-                phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name='Fixe')
-                if c:
-                    self.logger.info('Fix phone created')
-                else:
-                    self.logger.info('Fix phone updated')
-
-                number = self.ps_address.phone_mobile.replace(' ', '')
-                number = ' '.join([number[i:i+n] for i in range(0, len(number), n)])
+                setup_phonenumber(self.ps_address.phone, 'Fixe')
             if self.ps_address.phone_mobile:
-                phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=self.ps_address.phone_mobile, name='Mobile')
-                if c:
-                    self.logger.info('Mobile phone created')
-                else:
-                    self.logger.info('Mobile phone updated')
+                setup_phonenumber(self.ps_address.phone, 'Mobile')
 
     def set_birthday(self):
         if self.customer.birthday:

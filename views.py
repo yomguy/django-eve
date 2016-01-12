@@ -210,7 +210,7 @@ class Presta2Eve(object):
 
         def setup_phonenumber(orig_number, name):
             number = orig_number.replace(' ', '')
-            number = ' '.join([number[i:i+n] for i in range(0, len(number), 2)])
+            number = ' '.join([number[i:i+2] for i in range(0, len(number), 2)])
             if not ContactPhonenumber.objects.filter(contact=self.contact, number=number) or ContactPhonenumber.objects.filter(contact=self.contact, number=orig_number):
                 phone, c = ContactPhonenumber.objects.get_or_create(contact=self.contact, number=number, name=name)
                 if c:

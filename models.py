@@ -687,6 +687,7 @@ class EntryTickets(models.Model):
 
 
 class Event(models.Model):
+    
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField(default=False)
     meta_event = models.ForeignKey('MetaEvent')
@@ -715,6 +716,16 @@ class Event(models.Model):
         managed = False
         db_table = 'event'
 
+    def get_last_version(self):
+        return EventVersion.objects.filter(id=self)[0]
+
+    def __unicode__(self):
+        last = self.get_last_version()
+        # if self.meta_event:
+        #     meta_name = self.meta_event.name
+        # else:
+        #     meta_name = ''
+        return unicode(' - '.join([last.name]))
 
 class EventCategory(models.Model):
     name = models.CharField(unique=True, max_length=255)
@@ -3056,11 +3067,3 @@ class YOB(models.Model):
     class Meta(MetaCore):
         managed = False
         db_table = 'y_o_b'
-
-#
-# auditlog.register(Contact)
-# auditlog.register(ContactIndex)
-# auditlog.register(ContactPhonenumber)
-# auditlog.register(YOB)
-# auditlog.register(Organism)
-# auditlog.register(Professional)

@@ -14,7 +14,7 @@ setup(
     version='1.0',
     install_requires=['django',],
     platforms=['OS Independent'],
-    license='Gnu Public License V3',
+    license='Lesser GNU Public License v3',
     packages=['eve'],
     include_package_data=True,
     zip_safe=False,

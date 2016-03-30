@@ -12,10 +12,10 @@ setup(
     author="Guillaume Pellerin",
     author_email="guillaume.pellerin@ircam.fr",
     version='1.0',
-    install_requires=['django, ''],
+    install_requires=['django',],
     platforms=['OS Independent'],
     license='Gnu Public License V3',
-    packages=['django-eve'],
+    packages=['eve'],
     include_package_data=True,
     zip_safe=False,
     )

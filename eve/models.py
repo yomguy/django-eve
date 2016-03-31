@@ -687,10 +687,10 @@ class EntryTickets(models.Model):
 
 
 class Event(models.Model):
-    
+
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField(default=False)
-    meta_event = models.ForeignKey('MetaEvent')
+    meta_event = models.ForeignKey('MetaEvent', related_name='events')
     event_category = models.ForeignKey('EventCategory', blank=True, null=True)
     event_category_description = models.CharField(max_length=255, blank=True, null=True)
     staging = models.CharField(max_length=255, blank=True, null=True)

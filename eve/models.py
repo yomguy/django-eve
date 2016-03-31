@@ -1283,7 +1283,7 @@ class LocationVersion(models.Model):
 class Manifestation(models.Model):
     sf_guard_user = models.ForeignKey('SfGuardUser', blank=True, null=True)
     automatic = models.BooleanField(default=False)
-    event = models.ForeignKey(Event)
+    event = models.ForeignKey(Event, related_name='manifestations')
     location = models.ForeignKey(Location)
     color = models.ForeignKey(Color, blank=True, null=True)
     happens_at = models.DateTimeField()

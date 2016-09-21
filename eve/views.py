@@ -154,7 +154,7 @@ class Presta2Eve(object):
             for keyword in keywords:
                 if keyword:
                     self.create_index_raw(field='email', keyword=keyword, position=position)
-                    position += 1L
+                    position += 1
             self.logger.info('Index created')
 
     def set_lang(self):

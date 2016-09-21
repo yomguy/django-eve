@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
-from presta.models import PsCustomer
+from prestashop.models import PsCustomer
 from eve.models import Contact
 from eve.utils import Logger
 from eve.views import Presta2Eve

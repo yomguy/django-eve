@@ -7,7 +7,7 @@ from django.db import connections
 
 import re
 from eve.models import *
-from presta.models import *
+from prestashop.models import *
 
 
 class Presta2Eve(object):
@@ -136,10 +136,10 @@ class Presta2Eve(object):
         version.save()
         self.logger.info('Contact version added')
 
-    def create_index(self, field, keyword, position=0L):
+    def create_index(self, field, keyword, position=0):
         index, c = ContactIndex.objects.get_or_create(id=self.contact, field=field, keyword=keyword, position=position)
 
-    def create_index_raw(self, field='name', keyword='unknown', position=0L):
+    def create_index_raw(self, field='name', keyword='unknown', position=0):
         cursor = connections['eve'].cursor()
         command = 'INSERT INTO contact_index (id, field, keyword, position) VALUES (%s, %s, %s, %s)'
         cursor.execute(command, [self.contact.id, field, keyword, position])
@@ -150,7 +150,7 @@ class Presta2Eve(object):
             if self.contact.firstname:
                 self.create_index_raw(field='firstname', keyword=self.contact.firstname)
             keywords = re.split('\.|\@', self.contact.email)
-            position = 0L
+            position = 0
             for keyword in keywords:
                 if keyword:
                     self.create_index_raw(field='email', keyword=keyword, position=position)
